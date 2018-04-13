@@ -44,6 +44,7 @@ try{
 ### API - methods
 
 | REST | js | Description  |
+|:-----|:---|:-------------|
 |`POST /v1/messages` | `messages.send(message)` | Send a message to a contact. There are different message types for every platform ([FB](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-text), [Viber](https://docs.amio.io/v1.0/reference#viber-messages-text))|
 
 
