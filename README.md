@@ -7,7 +7,7 @@ We'll be more than happy if you report any issues or even create pull requests ;
 ## Install
 
 ```bash
-npm install smooch-core --save
+npm install amio-sdk-js --save
 ```
 
 ## API 
