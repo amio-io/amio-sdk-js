@@ -7,7 +7,7 @@ We'll be more than happy if you report any issues or even create pull requests ;
 ## Install
 
 ```bash
-npm install smooch-core --save
+npm install amio-sdk-js --save
 ```
 
 ## API 
@@ -43,8 +43,9 @@ try{
 
 ### API - methods
 
-| REST | js | Description  |
-|`POST /v1/messages` | `messages.send(message)` | Send a message to a contact. There are different message types for every platform ([FB](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-text), [Viber](https://docs.amio.io/v1.0/reference#viber-messages-text))|
+ REST | js | Description  
+----------------------------|---|-------------
+POST&nbsp;/v1/messages | `messages.send(message)` | Send a message to a contact. There are different message types for every platform ([FB](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-text), [Viber](https://docs.amio.io/v1.0/reference#viber-messages-text))
 
 
 ## Webhooks
