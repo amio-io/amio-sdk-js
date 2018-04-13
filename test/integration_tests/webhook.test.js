@@ -9,7 +9,7 @@ describe('Webhooks', function () {
 
   before(function () {
     const settings = {
-      appSecret: 'test-secret'
+      secretToken: 'test-secret'
     }
     webhookRouter = new WebhookRouter(settings)
   })
