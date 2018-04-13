@@ -1,7 +1,9 @@
-const {AmioWebhookHandler} = require('../../index')
+const  WebhookRouter = require('../../index').WebhookRouter
+const xHubSignatureUtils = require('./../../lib/x-hub-signature.utils')
 const expect = require('chai').expect
+const moment = require('moment')
 
-let amioWebhookHandler = null
+let webhookRouter = null
 
 describe('Webhooks', function () {
 
@@ -9,69 +11,52 @@ describe('Webhooks', function () {
     const settings = {
       appSecret: 'test-secret'
     }
-    amioWebhookHandler = new AmioWebhookHandler(settings)
+    webhookRouter = new WebhookRouter(settings)
   })
 
   it('EVENT message_received', (done) => {
     const event = 'message_received'
     const testTimestamp = '2016-10-06T13:42:48Z'
     const messageId = '151730312500791'
-    const messageReceivedEvent = getTestMessageEvent(event, testTimestamp, messageId)
-    const messageReceivedEventData = messageReceivedEvent.data
+    const webhookEvent = getTestMessageEvent(event, testTimestamp, messageId)
 
-    amioWebhookHandler.onMessageReceived((data, timestamp) => {
-      expect(timestamp).to.eql(testTimestamp)
-      expect(data).to.eql(messageReceivedEventData)
-      done()
-    })
-
-    amioWebhookHandler.routeEvent(messageReceivedEvent)
+    testWebhook(webhookRouter.onMessageReceived.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 
-  it('EVENT message_echo', (done) => {
+  it('EVENT message_echo', done => {
     const event = 'message_echo'
     const testTimestamp = '2016-11-06T13:42:48Z'
     const messageId = '151730312500800'
-    const messageEchoEvent = getTestMessageEvent(event, testTimestamp, messageId)
-    const messageEchoEventData = messageEchoEvent.data
+    const webhookEvent = getTestMessageEvent(event, testTimestamp, messageId)
 
-    amioWebhookHandler.onMessageEcho((data, timestamp) => {
-      expect(timestamp).to.eql(testTimestamp)
-      expect(data).to.eql(messageEchoEventData)
-      done()
-    })
-
-    amioWebhookHandler.routeEvent(messageEchoEvent)
+    testWebhook(webhookRouter.onMessageEcho.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 
-  it('EVENT message_delivered', (done) => {
+  it('EVENT message_delivered', done => {
     const testTimestamp = '2016-11-06T13:42:48Z'
     const messageId = '151730312500800'
-    const messageDeliveredEvent = getTestMessagesDeliveredEvent(testTimestamp, messageId)
-    const messageDeliveredEventData = messageDeliveredEvent.data
+    const webhookEvent = getTestMessagesDeliveredEvent(testTimestamp, messageId)
 
-    amioWebhookHandler.onMessagesDelivered((data, timestamp) => {
-      expect(timestamp).to.eql(testTimestamp)
-      expect(data).to.eql(messageDeliveredEventData)
-      done()
-    })
-
-    amioWebhookHandler.routeEvent(messageDeliveredEvent)
+    testWebhook(webhookRouter.onMessagesDelivered.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 
-  it('EVENT message_read', (done) => {
+
+  it('EVENT message_read', done => {
     const testTimestamp = '2016-11-06T13:42:48Z'
-    const messageReadEvent = getTestMessagesReadEvent(testTimestamp)
-    const messageReadEventData = messageReadEvent.data
+    const lastReadTimestamp = moment()
+    const webhookEvent = getTestMessagesReadEvent(testTimestamp, lastReadTimestamp)
 
-    amioWebhookHandler.onMessagesRead((data) => {
-      expect(data).to.eql(messageReadEventData)
-      done()
-    })
-
-    amioWebhookHandler.routeEvent(messageReadEvent)
+    testWebhook(webhookRouter.onMessagesRead.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 })
+
+function verifyWebhookEvent(testTimestamp, eventData, done) {
+  return async (data, timestamp) => {
+    expect(timestamp).to.eql(testTimestamp)
+    expect(data).to.eql(eventData)
+    done()
+  }
+}
 
 function getTestMessageEvent (event, timestamp, id) {
   return {
@@ -112,10 +97,10 @@ function getTestMessagesDeliveredEvent (timestamp, id) {
   }
 }
 
-function getTestMessagesReadEvent (lastReadTimestamp) {
+function getTestMessagesReadEvent (timestamp, lastReadTimestamp) {
   return {
     event: 'messages_read',
-    timestamp: '2016-10-06T13:42:48Z',
+    timestamp: timestamp,
     data: {
       channel: {
         id: '151730312500791',
@@ -125,6 +110,16 @@ function getTestMessagesReadEvent (lastReadTimestamp) {
         id: '1419024554891329'
       },
       last_read_timestamp: lastReadTimestamp
-    },
+    }
   }
+}
+
+function testWebhook(onMethod, testTimestamp, webhookEvent, done) {
+  onMethod(verifyWebhookEvent(testTimestamp, webhookEvent.data, done))
+  const req = {
+    header: () => xHubSignatureUtils.calculateXHubSignature('test-secret', JSON.stringify(webhookEvent)),
+    body: webhookEvent
+  }
+  const res = {sendStatus: () => {}}
+  webhookRouter.handleEvent(req, res)
 }
