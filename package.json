@@ -1,7 +1,6 @@
 {
   "name": "amio-sdk-js",
   "version": "0.9.0",
-  "private": true,
   "scripts": {
     "test-integrations": "mocha test/integration_tests/**/*.test.js",
     "test-e2e": "mocha test/e2e/**/*.test.js"
