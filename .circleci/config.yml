@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/amio-sdk-js
+
+    docker:
+      - image: circleci/node:8.11.1
+
+    steps:
+      - checkout
+
+      # Install & Cache Dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run: npm install
+      - save_cache:
+                paths:
+                  - node_modules
+                key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run:
+          name: Tests
+          command: npm run-script test
