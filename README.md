@@ -4,7 +4,17 @@ Server-side library implementing [Amio](https://amio.io/) API for instant messen
 
 We'll be more than happy if you report any issues or even create pull requests ;-). Let us know how to improve this lib, thank you!
 
-## Install
+- [Installation](#installation)
+- [API](#api)
+  - [setup & usage](#api---setup--usage)
+  - [error handling](#api---error-handling)
+  - [methods](#api---methods)
+- [Webhooks](#webhooks)
+  - [setup & usage](#webhooks---setup--usage)
+  - [event types](#webhooks---event-types) 
+  
+
+## Installation
 
 ```bash
 npm install amio-sdk-js --save
