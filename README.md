@@ -1,4 +1,5 @@
 # amio-sdk-js
+[![CircleCI](https://circleci.com/gh/amio-io/amio-sdk-js.svg?style=shield)](https://circleci.com/gh/amio-io/amio-sdk-js) [![npm version](https://badge.fury.io/js/amio-sdk-js.svg)](https://badge.fury.io/js/amio-sdk-js)
 
 Server-side library implementing [Amio](https://amio.io/) API for instant messengers. It covers API calls and webhooks.
 
