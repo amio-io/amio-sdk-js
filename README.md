@@ -76,7 +76,7 @@ const amioWebhookRouter = new WebhookRouter({
     secretToken: 'get secret at https://app.amio.io/administration/channels/{{CHANNEL_ID}}/webhook'
 })
 
-// error handling
+// error handling, e.g. x-hub-signature is not correct
 amioWebhookRouter.onError(error => console.error(error))
 
 // assign event handlers 
@@ -92,21 +92,8 @@ amioWebhookRouter.onMessageEcho(handleMessageEcho)
 const express = require('express')
 const router = express.Router()
 
-// EITHER simply direct traffic to WebhookRouter
-router.post('/webhooks/amio-communicator', amioWebhookRouter.handleEvent)
-
-// OR handle errors too
 router.post('/webhooks/amio-communicator', async (req, res) => {
-    try {
-        await amioWebhookHandler.handleEvent(req, res)
-    } catch (err) {
-        if (err.amioApiError) {
-          console.error(err.jsonify(), err) 
-          return
-        }
-        
-        console.error(err) 
-    }
+    await amioWebhookHandler.handleEvent(req, res)
 })
 ``` 
 
