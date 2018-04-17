@@ -41,7 +41,7 @@ Amio API errors keep the structure described in the [docs](https://docs.amio.io/
 ```js
 try{
   // ...
-}catch(err){
+} catch(err){
     if (err.amioApiError) {
       console.error(err.jsonify(), err) 
       return
@@ -55,7 +55,7 @@ try{
 
  REST | js | Description  
 ----------------------------|---|-------------
-POST&nbsp;/v1/messages | `messages.send(message)` | Send a message to a contact. There are different message types for every platform ([FB](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-text), [Viber](https://docs.amio.io/v1.0/reference#viber-messages-text))
+POST&nbsp;/v1/messages | `messages.send(message)` | Send a message to a contact. There are different message types for every platform ([FB](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-text), [Viber](https://docs.amio.io/v1.0/reference#viber-messages-text)).
 
 
 ## Webhooks
@@ -91,6 +91,7 @@ amioWebhookRouter.onMessageEcho(handleMessageEcho)
 // example with Express.js 4
 const express = require('express')
 const router = express.Router()
+
 
 router.post('/webhooks/amio-communicator', async (req, res) => {
     await amioWebhookHandler.handleEvent(req, res)

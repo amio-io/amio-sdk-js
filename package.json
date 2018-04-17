@@ -2,8 +2,7 @@
   "name": "amio-sdk-js",
   "version": "0.10.0",
   "scripts": {
-    "test-integrations": "mocha test/integration_tests/**/*.test.js",
-    "test-e2e": "mocha test/e2e/**/*.test.js"
+    "test": "mocha test/**/*.test.js"
   },
   "dependencies": {
     "await-trace": "1.0.2",
