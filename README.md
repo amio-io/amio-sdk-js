@@ -12,6 +12,7 @@ We'll be more than happy if you report any issues or even create pull requests ;
 - [Webhooks](#webhooks)
   - [setup & usage](#webhooks---setup--usage)
   - [event types](#webhooks---event-types) 
+- [Missing a feature?](#missing-a-feature)
   
 
 ## Installation
@@ -123,3 +124,16 @@ amioWebhookRouter.onMessageReceived((data, timestamp) => {
 - [Messages Read](https://docs.amio.io/reference#viber-webhooks-messages-read) 
 - [Message Echo](https://docs.amio.io/reference#viber-webhooks-message-echo) 
 - [Postback Received](https://docs.amio.io/reference#viber-webhooks-postback-received) 
+
+## Missing a feature?
+
+File an issue or create a pull request. If you need a quick solution, use the prepared [axios http client](https://github.com/axios/axios):
+
+```js
+const amioHttpClient = require('amio-sdk-js').amioHttpClient
+
+amioHttpClient.get('/v1/messages')
+    .then(response => {
+      // ...
+    })
+```
