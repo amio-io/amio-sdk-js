@@ -13,6 +13,7 @@ We'll be more than happy if you report any issues or even create pull requests ;
 - [Webhooks](#webhooks)
   - [setup & usage](#webhooks---setup--usage)
   - [event types](#webhooks---event-types) 
+- [Missing a feature?](#missing-a-feature)
   
 
 ## Installation
@@ -77,7 +78,7 @@ const amioWebhookRouter = new WebhookRouter({
     secretToken: 'get secret at https://app.amio.io/administration/channels/{{CHANNEL_ID}}/webhook'
 })
 
-// error handling
+// error handling, e.g. x-hub-signature is not correct
 amioWebhookRouter.onError(error => console.error(error))
 
 // assign event handlers 
@@ -93,21 +94,9 @@ amioWebhookRouter.onMessageEcho(handleMessageEcho)
 const express = require('express')
 const router = express.Router()
 
-// EITHER simply direct traffic to WebhookRouter
-router.post('/webhooks/amio', amioWebhookRouter.handleEvent)
 
-// OR handle errors too
-router.post('/webhooks/amio', async (req, res) => {
-    try {
-        await amioWebhookHandler.handleEvent(req, res)
-    } catch (err) {
-        if (err.amioApiError) {
-          console.error(err.jsonify(), err) 
-          return
-        }
-        
-        console.error(err) 
-    }
+router.post('/webhooks/amio-communicator', async (req, res) => {
+    await amioWebhookHandler.handleEvent(req, res)
 })
 ``` 
 
@@ -136,3 +125,16 @@ amioWebhookRouter.onMessageReceived((data, timestamp) => {
 - [Messages Read](https://docs.amio.io/reference#viber-webhooks-messages-read) 
 - [Message Echo](https://docs.amio.io/reference#viber-webhooks-message-echo) 
 - [Postback Received](https://docs.amio.io/reference#viber-webhooks-postback-received) 
+
+## Missing a feature?
+
+File an issue or create a pull request. If you need a quick solution, use the prepared [axios http client](https://github.com/axios/axios):
+
+```js
+const amioHttpClient = require('amio-sdk-js').amioHttpClient
+
+amioHttpClient.get('/v1/messages')
+    .then(response => {
+      // ...
+    })
+```

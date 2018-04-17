@@ -15,6 +15,28 @@ describe('Amio API Connector', function () {
     amioApi = new AmioApi(settings)
   })
 
+  describe('API error', () => {
+    it('catches a 422 error', async () => {
+      await amioApi.messages.send({})
+        .then(() => {
+          throw new Error('exception was expected')
+        })
+        .catch(e => {
+          expect(e.amioApiError).not.to.equal(null)
+          expect(e.jsonify()).to.eql({
+            timestamp: e.amioApiError.timestamp,
+            status: {
+              code: 401,
+              message: "Unauthorized"
+            },
+            errors: [{
+              message: 'Wrong accessToken.'
+            }]
+          })
+        })
+    })
+  })
+
   describe('messages', () => {
     it('send a message', async () => {
       const channel = {

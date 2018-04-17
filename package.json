@@ -1,6 +1,6 @@
 {
   "name": "amio-sdk-js",
-  "version": "0.10.0",
+  "version": "1.0.0",
   "scripts": {
     "test": "mocha test/**/*.test.js"
   },
