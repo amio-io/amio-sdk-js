@@ -75,7 +75,10 @@ describe('Amio API Connector', function () {
       })
 
       expect(notification).to.eql({
-        channel: assoc('type', 'facebook_messenger', channel),
+          channel: {
+            id: channel.id,
+            type: notification.channel.type
+          },
         contact, type
       })
     })
@@ -97,7 +100,10 @@ describe('Amio API Connector', function () {
       expect(sentMessage.id).to.exist
 
       expect(omit('id', sentMessage)).to.eql({
-        channel: assoc('type', 'facebook_messenger', channel),
+        channel: {
+          id: channel.id,
+          type: sentMessage.channel.type
+        },
         contact, content, metadata
       })
     })
