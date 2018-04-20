@@ -3,7 +3,7 @@
 
 Server-side library implementing [Amio](https://amio.io/) API for instant messengers. It covers API calls and webhooks.
 
-We'll be more than happy if you report any issues or even create pull requests ;-). Let us know how to improve this lib, thank you!
+Let us know how to improve this library. We'll be more than happy if you report any issues or even create pull requests ;-)
 
 - [Installation](#installation)
 - [API](#api)
