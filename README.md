@@ -73,6 +73,7 @@ Central logic to handle webhooks coming from Amio is **WebhookRouter**. What doe
 1. Setup **WebhookRouter**. 
 
 ```js
+// file: amio.webhook-handler.js
 const WebhookRouter = require('amio-sdk-js').WebhookRouter
 
 const amioWebhookRouter = new WebhookRouter({
@@ -87,17 +88,20 @@ amioWebhookRouter.onMessageReceived(handleMessageReceived)
 amioWebhookRouter.onMessagesDelivered(handleMessageDelivered)
 amioWebhookRouter.onMessagesRead(handleMessagesRead)
 amioWebhookRouter.onMessageEcho(handleMessageEcho)
+
+module.exports = amioWebhookRouter.handleEvent
 ```
 
 2. Route incoming requests to **WebhookRouter**. You will probably **NOT** want to use a common error handler!!!
 ```js
 // example with Express.js 4
 const express = require('express')
+const handleAmioEvent = require('./amio.webhook-handler')
 const router = express.Router()
 
 
 router.post('/webhooks/amio-communicator', async (req, res) => {
-    await amioWebhookHandler.handleEvent(req, res)
+    await handleAmioEvent(req, res)
 })
 ``` 
 
