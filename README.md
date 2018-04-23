@@ -108,7 +108,7 @@ router.post('/webhooks/amio-communicator', async (req, res) => {
 
 3. Implement **event handlers**. 
 ```js 
-amioWebhookRouter.onMessageReceived(async (data, timestamp) => {
+amioWebhookRouter.onMessageReceived((data, timestamp) => {
     console.log('a new message from contact ${data.contact.id} was received!')
 })
 ``` 
