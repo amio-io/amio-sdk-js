@@ -57,8 +57,8 @@ try{
 
  REST | js | Description  
 ----------------------------|---|-------------
-POST&nbsp;/v1/messages | `messages.send(message)` | Send a message to a contact. There are different message types for every platform ([FB](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-text), [Viber](https://docs.amio.io/v1.0/reference#viber-messages-text)).
-POST&nbsp;/v1/notifications | `notifications.send(notification)` | Send a notification to a contact. There are notifications for [FB](https://docs.amio.io/v1.0/reference#facebook-messenger-notifications-send-notification) only.
+POST&nbsp;/v1/messages | `messages.send(message)` | Send a message to a contact. [docs](https://docs.amio.io/v1.0/reference#messages)
+POST&nbsp;/v1/notifications | `notifications.send(notification)` | Send a notification to a contact. [docs](https://docs.amio.io/v1.0/reference#notifications)
 
 
 ## Webhooks
