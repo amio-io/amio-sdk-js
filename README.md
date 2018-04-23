@@ -70,10 +70,9 @@ Central logic to handle webhooks coming from Amio is **WebhookRouter**. What doe
 
 ### Webhooks - setup & usage
 
-1. Setup **WebhookRouter**. 
-
 ```js
-// file: amio.webhook-handler.js
+const express = require('express')
+const router = express.Router()
 const WebhookRouter = require('amio-sdk-js').WebhookRouter
 
 const amioWebhookRouter = new WebhookRouter({
@@ -84,34 +83,15 @@ const amioWebhookRouter = new WebhookRouter({
 amioWebhookRouter.onError(error => console.error(error))
 
 // assign event handlers 
-amioWebhookRouter.onMessageReceived(handleMessageReceived)
-amioWebhookRouter.onMessagesDelivered(handleMessageDelivered)
-amioWebhookRouter.onMessagesRead(handleMessagesRead)
-amioWebhookRouter.onMessageEcho(handleMessageEcho)
+amioWebhookRouter.onMessageReceived((data, timestamp) => console.log('a new message from contact ${data.contact.id} was received!'))
+amioWebhookRouter.onMessagesDelivered(/* TODO */)
+amioWebhookRouter.onMessagesRead(/* TODO */)
+amioWebhookRouter.onMessageEcho(/* TODO */)
 
-module.exports = amioWebhookRouter.handleEvent
+router.post('/webhooks/amio', (req, res) => amioWebhookRouter.handleEvent(req, res))
+
+module.exports = router
 ```
-
-2. Route incoming requests to **WebhookRouter**. You will probably **NOT** want to use a common error handler!!!
-```js
-// example with Express.js 4
-const express = require('express')
-const handleAmioEvent = require('./amio.webhook-handler')
-const router = express.Router()
-
-
-router.post('/webhooks/amio-communicator', async (req, res) => {
-    await handleAmioEvent(req, res)
-})
-``` 
-
-
-3. Implement **event handlers**. 
-```js 
-amioWebhookRouter.onMessageReceived((data, timestamp) => {
-    console.log('a new message from contact ${data.contact.id} was received!')
-})
-``` 
 
 ### Webhooks - event types
 
