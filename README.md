@@ -55,11 +55,11 @@ try{
 
 ### API - methods
 
- REST | js | Description | Links
+ HTTP | Endpoint | JavaScript | Description | Links
 ---|---|---|-----------------
-POST&nbsp;/v1/messages | `messages.send(message)` | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
-GET&nbsp;/v1/<br>channels/{{channel_id}}/<br>contacts/{{contact_id}}/<br>messages | `messages.list(channelId, contactId, params)` | Get a list of messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [options](https://docs.amio.io/v1.0/reference#pagination)
-POST&nbsp;/v1/notifications | `notifications.send(notification)` | Send a notification to a contact. | [docs](https://docs.amio.io/v1.0/reference#notifications)
+POST | /v1/messages | `messages.send(message)` | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
+GET | /v1/<br>channels/{{channel_id}}/<br>contacts/{{contact_id}}/<br>messages | `messages.list(channelId, contactId, params)` | Get a list of messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [options](https://docs.amio.io/v1.0/reference#pagination)
+POST | /v1/notifications | `notifications.send(notification)` | Send a notification to a contact. | [docs](https://docs.amio.io/v1.0/reference#notifications)
 
 
 ## Webhooks
