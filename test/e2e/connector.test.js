@@ -69,7 +69,7 @@ describe('Amio API Connector', function () {
   })
 
   describe('messages', () => {
-    it('send a message', async () => {
+    it('sends a message', async () => {
       const content = {
         type: 'text',
         payload: 'Test message from Amio SDK'
@@ -90,6 +90,11 @@ describe('Amio API Connector', function () {
         },
         contact, content, metadata
       })
+    })
+
+    it('lists messages', async () => {
+      // TODO test response.request.headers{max,offset}
+      // TODO test max:2 offset:1 messages were returned
     })
   })
 
