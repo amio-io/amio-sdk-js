@@ -93,8 +93,19 @@ describe('Amio API Connector', function () {
     })
 
     it('lists messages', async () => {
-      // TODO test response.request.headers{max,offset}
-      // TODO test max:2 offset:1 messages were returned
+      const max = 2
+      const offset = 1
+      const params = {max, offset}
+
+      const messageList = await amioApi.messages.list(channel.id, contact.id, params)
+
+      expect(messageList).to.have.all.keys('items', 'totalCount')
+      expect(messageList.items).to.be.an('array')
+      expect(messageList.items).to.have.length(max)
+      expect(messageList.items[0].channel.id).to.equal(channel.id)
+      expect(messageList.items[0].contact.id).to.equal(contact.id)
+      expect(messageList.items[0]).to.include.all.keys('id', 'sent', 'read', 'direction', 'delivered', 'channel', 'contact', 'content')
+      expect(Number.parseInt(messageList.totalCount)).to.be.a('number')
     })
   })
 
