@@ -18,7 +18,7 @@ describe('Webhooks', function () {
     const event = 'message_received'
     const testTimestamp = '2016-10-06T13:42:48Z'
     const messageId = '151730312500791'
-    const webhookEvent = getTestMessageEvent(event, testTimestamp, messageId)
+    const webhookEvent = createEventMessageReceived(event, testTimestamp, messageId)
 
     testWebhook(webhookRouter.onMessageReceived.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
@@ -27,7 +27,7 @@ describe('Webhooks', function () {
     const event = 'message_echo'
     const testTimestamp = '2016-11-06T13:42:48Z'
     const messageId = '151730312500800'
-    const webhookEvent = getTestMessageEvent(event, testTimestamp, messageId)
+    const webhookEvent = createEventMessageReceived(event, testTimestamp, messageId)
 
     testWebhook(webhookRouter.onMessageEcho.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
@@ -35,7 +35,7 @@ describe('Webhooks', function () {
   it('EVENT message_delivered', done => {
     const testTimestamp = '2016-11-06T13:42:48Z'
     const messageId = '151730312500800'
-    const webhookEvent = getTestMessagesDeliveredEvent(testTimestamp, messageId)
+    const webhookEvent = createEventMessagesDelivered(testTimestamp, messageId)
 
     testWebhook(webhookRouter.onMessagesDelivered.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
@@ -44,9 +44,17 @@ describe('Webhooks', function () {
   it('EVENT message_read', done => {
     const testTimestamp = '2016-11-06T13:42:48Z'
     const lastReadTimestamp = moment()
-    const webhookEvent = getTestMessagesReadEvent(testTimestamp, lastReadTimestamp)
+    const webhookEvent = createEventMessagesRead(testTimestamp, lastReadTimestamp)
 
     testWebhook(webhookRouter.onMessagesRead.bind(webhookRouter), testTimestamp, webhookEvent, done)
+  })
+
+  it('EVENT postback', done => {
+    const testTimestamp = '2016-11-06T13:42:48Z'
+    const lastReadTimestamp = moment()
+    const webhookEvent = createEventPostback(testTimestamp)
+
+    testWebhook(webhookRouter.onPostbackReceived.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 })
 
@@ -58,7 +66,11 @@ function verifyWebhookEvent(testTimestamp, eventData, done) {
   }
 }
 
-function getTestMessageEvent (event, timestamp, id) {
+function createEventPostback() {
+
+}
+
+function createEventMessageReceived (event, timestamp, id) {
   return {
     event,
     timestamp,
@@ -80,7 +92,7 @@ function getTestMessageEvent (event, timestamp, id) {
   }
 }
 
-function getTestMessagesDeliveredEvent (timestamp, id) {
+function createEventMessagesDelivered (timestamp, id) {
   return {
     event: 'messages_delivered',
     timestamp,
@@ -97,7 +109,7 @@ function getTestMessagesDeliveredEvent (timestamp, id) {
   }
 }
 
-function getTestMessagesReadEvent (timestamp, lastReadTimestamp) {
+function createEventMessagesRead (timestamp, lastReadTimestamp) {
   return {
     event: 'messages_read',
     timestamp: timestamp,
