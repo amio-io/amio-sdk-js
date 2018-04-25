@@ -51,7 +51,6 @@ describe('Webhooks', function () {
 
   it('EVENT postback', done => {
     const testTimestamp = '2016-11-06T13:42:48Z'
-    const lastReadTimestamp = moment()
     const webhookEvent = createEventPostback(testTimestamp)
 
     testWebhook(webhookRouter.onPostbackReceived.bind(webhookRouter), testTimestamp, webhookEvent, done)
@@ -64,10 +63,6 @@ function verifyWebhookEvent(testTimestamp, eventData, done) {
     expect(data).to.eql(eventData)
     done()
   }
-}
-
-function createEventPostback() {
-
 }
 
 function createEventMessageReceived (event, timestamp, id) {
@@ -87,6 +82,25 @@ function createEventMessageReceived (event, timestamp, id) {
       content: {
         type: 'text',
         payload: 'Test message'
+      }
+    }
+  }
+}
+
+function createEventPostback(timestamp) {
+  return {
+    event: 'postback',
+    timestamp,
+    data: {
+      channel: {
+        id: '151730312500791',
+        type: 'facebook_messenger',
+      },
+      contact: {
+        id: '1419024554891329'
+      },
+      postback: {
+        payload: 'test payload'
       }
     }
   }
