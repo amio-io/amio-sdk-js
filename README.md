@@ -55,13 +55,18 @@ try{
 
 ### API - methods
 
+**Contacts**
+
+ HTTP | Endpoint | JavaScript | Description | Links
+---|---|---|---|-----------------
+GET | /v1/channels/{{channel_id}}/contacts | `contacts.get(channelId, contactId)` | Get a list of contacts for specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
 
 **Messages**
 
  HTTP | Endpoint | JavaScript | Description | Links
 ---|---|---|---|-----------------
 POST | /v1/messages | `messages.send(message)` | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
-GET | /v1/<br>channels/{{channel_id}}/<br>contacts/{{contact_id}}/<br>messages | `messages.list(channelId, contactId, params)` | Get a list of messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [options](https://docs.amio.io/v1.0/reference#pagination)
+GET | /v1/<br>channels/{{channel_id}}/<br>contacts/{{contact_id}}/<br>messages | `messages.list(channelId, contactId, params)` | Get a list of messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [params](https://docs.amio.io/v1.0/reference#pagination)
 
 
 **Notifications**
