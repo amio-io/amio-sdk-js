@@ -40,6 +40,29 @@ describe('Amio API Connector', function () {
     })
   })
 
+  describe('channels', () => {
+    it('finds a channel', async () => {
+      const channelFound = await amioApi.channels.get(channel.id)
+
+      expect(channelFound).to.include.all.keys('id', 'type', 'name', 'webhook')
+      expect(channelFound.id).to.eql(channel.id)
+    })
+
+    it('lists channels', async () => {
+      const max = 2
+      const offset = 1
+      const params = {max, offset}
+
+      const channelList = await amioApi.channels.list(params)
+
+      expect(channelList).to.have.all.keys('items', 'totalCount')
+      expect(channelList.items).to.be.an('array')
+      // expect(channelList.items.some(item => item.id === channel.id)).to.be.true
+      expect(channelList.items[0]).to.include.all.keys('id', 'type', 'name', 'webhook')
+      expect(channelList.totalCount).to.be.a('number')
+    })
+  })
+
   describe('contacts', () => {
     it('finds a contact', async () => {
       const contactFound = await amioApi.contacts.get(channel.id, contact.id)
@@ -105,7 +128,7 @@ describe('Amio API Connector', function () {
       expect(messageList.items[0].channel.id).to.equal(channel.id)
       expect(messageList.items[0].contact.id).to.equal(contact.id)
       expect(messageList.items[0]).to.include.all.keys('id', 'sent', 'read', 'direction', 'delivered', 'channel', 'contact', 'content')
-      expect(Number.parseInt(messageList.totalCount)).to.be.a('number')
+      expect(messageList.totalCount).to.be.a('number')
     })
   })
 
