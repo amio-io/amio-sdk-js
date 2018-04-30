@@ -105,9 +105,21 @@ describe('Amio API Connector', function () {
       expect(messageList.items[0].channel.id).to.equal(channel.id)
       expect(messageList.items[0].contact.id).to.equal(contact.id)
       expect(messageList.items[0]).to.include.all.keys('id', 'sent', 'read', 'direction', 'delivered', 'channel', 'contact', 'content')
-      expect(Number.parseInt(messageList.totalCount)).to.be.a('number')
+      expect(messageList.totalCount).to.be.a('number')
     })
   })
 
+  describe('settings', () => {
+    it('returns settings', async () => {
+      const settingsFound = await amioApi.settings.get(channel.id)
+      expect(settingsFound).to.be.an('object')
+    })
+
+    it('patches settings', async () => {
+      const option = {"get_started_button": null}
+      const settingsPatched = await amioApi.settings.set(channel.id, option)
+      expect(settingsPatched).to.eql({})
+    })
+  })
 
 })
