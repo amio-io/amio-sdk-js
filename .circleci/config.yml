@@ -27,7 +27,7 @@ jobs:
 
 workflows:
   version: 2
-  my-workflow:
+  amio-sdk-js:
     jobs:
       - build:
           context: ctx-amio-sdk-js
