@@ -28,6 +28,6 @@ jobs:
 workflows:
   version: 2
   my-workflow:
-    jobs:
-      - run-tests:
+    build:
+      working_directory: ~/amio-sdk-js
           context: ctx-amio-sdk-js
