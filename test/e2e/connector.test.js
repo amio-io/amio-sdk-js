@@ -116,8 +116,20 @@ describe('Amio API Connector', function () {
     })
 
     it('patches settings', async () => {
-      const option = {"get_started_button": null}
-      const settingsPatched = await amioApi.settings.set(channel.id, option)
+      const settingsFound = await amioApi.settings.get(channel.id)
+      let settingsPatched, option = {}
+
+      if (settingsFound.menu) {
+        option.user_input_enabled = null
+        settingsPatched = await amioApi.settings.set(channel.id, option)
+        if (settingsFound.user_input_enabled) await amioApi.settings.set(channel.id, settingsFound.user_input_enabled)
+      }
+      else {
+        option.get_started_button = null
+        settingsPatched = await amioApi.settings.set(channel.id, option)
+        if (settingsFound.get_started_button) await amioApi.settings.set(channel.id, settingsFound.get_started_button)
+      }
+
       expect(settingsPatched).to.eql({})
     })
   })
