@@ -24,3 +24,10 @@ jobs:
       - run:
           name: Tests
           command: npm run-script test
+
+workflows:
+  version: 2
+  my-workflow:
+    jobs:
+      - run-tests:
+          context: ctx-amio-sdk-js
