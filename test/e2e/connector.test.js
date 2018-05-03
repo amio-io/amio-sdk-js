@@ -116,10 +116,9 @@ describe('Amio API Connector', function () {
     })
 
     it('patches settings', async () => {
-      const option = {"get_started_button": null}
-      const settingsPatched = await amioApi.settings.set(channel.id, option)
-      expect(settingsPatched).to.eql({})
-    })
+      const settingsPatched = await amioApi.settings.set(channel.id, {})
+      expect(settingsPatched).to.be.an('object')
+      })
   })
 
 })
