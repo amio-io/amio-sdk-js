@@ -132,5 +132,16 @@ describe('Amio API Connector', function () {
     })
   })
 
+  describe('settings', () => {
+    it('returns settings', async () => {
+      const settingsFound = await amioApi.settings.get(channel.id)
+      expect(settingsFound).to.be.an('object')
+    })
+
+    it('patches settings', async () => {
+      const settingsPatched = await amioApi.settings.set(channel.id, {})
+      expect(settingsPatched).to.be.an('object')
+      })
+  })
 
 })
