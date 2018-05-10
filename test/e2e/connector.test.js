@@ -41,14 +41,14 @@ describe('Amio API Connector', function () {
   })
 
   describe('channels', () => {
-    it('finds a channel', async () => {
+    it('find a channel', async () => {
       const channelFound = await amioApi.channels.get(channel.id)
 
       expect(channelFound).to.include.all.keys('id', 'type', 'name', 'webhook')
       expect(channelFound.id).to.eql(channel.id)
     })
 
-    it('lists channels', async () => {
+    it('list channels', async () => {
       const max = 2
       const offset = 1
       const params = {max, offset}
@@ -61,10 +61,20 @@ describe('Amio API Connector', function () {
       expect(channelList.items[0]).to.include.all.keys('id', 'type', 'name', 'webhook')
       expect(channelList.totalCount).to.be.a('number')
     })
+
+    it('refuse to create channel', async () => {
+      const error = await amioApi.channels.create({}).catch(e => e.amioApiError.status.code)
+      expect(error).to.equal(422)
+    })
+
+    it('return updated channel', async () => {
+      const channelOriginal = await amioApi.channels.update(channel.id, {})
+      expect(channelOriginal).to.be.an('object')
+    })
   })
 
   describe('contacts', () => {
-    it('finds a contact', async () => {
+    it('find a contact', async () => {
       const contactFound = await amioApi.contacts.get(channel.id, contact.id)
 
       expect(contactFound).to.include.all.keys('id', 'name')
@@ -115,7 +125,7 @@ describe('Amio API Connector', function () {
       })
     })
 
-    it('lists messages', async () => {
+    it('list messages', async () => {
       const max = 2
       const offset = 1
       const params = {max, offset}
