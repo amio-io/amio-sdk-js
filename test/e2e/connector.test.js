@@ -41,12 +41,25 @@ describe('Amio API Connector', function () {
   })
 
   describe('contacts', () => {
-    it('finds a contact', async () => {
+    it('find a contact', async () => {
       const contactFound = await amioApi.contacts.get(channel.id, contact.id)
 
       expect(contactFound).to.include.all.keys('id', 'name')
       expect(contactFound).to.have.any.keys('gender', 'locale', 'country', 'time_zone', 'photo_url')
       expect(contactFound.id).to.eql(contact.id)
+    })
+
+    it('list contacts', async () => {
+      const max = 2
+      const offset = 1
+      const params = {max, offset}
+
+      const contactList = await amioApi.contacts.list(channel.id, params)
+
+      expect(contactList).to.have.all.keys('items', 'totalCount')
+      expect(contactList.items).to.be.an('array')
+      expect(contactList.items[0]).to.include.all.keys('id', 'name')
+      expect(contactList.totalCount).to.be.a('number')
     })
   })
 
@@ -91,7 +104,34 @@ describe('Amio API Connector', function () {
         contact, content, metadata
       })
     })
+
+    it('lists messages', async () => {
+      const max = 2
+      const offset = 1
+      const params = {max, offset}
+
+      const messageList = await amioApi.messages.list(channel.id, contact.id, params)
+
+      expect(messageList).to.have.all.keys('items', 'totalCount')
+      expect(messageList.items).to.be.an('array')
+      expect(messageList.items).to.have.length(max)
+      expect(messageList.items[0].channel.id).to.equal(channel.id)
+      expect(messageList.items[0].contact.id).to.equal(contact.id)
+      expect(messageList.items[0]).to.include.all.keys('id', 'sent', 'read', 'direction', 'delivered', 'channel', 'contact', 'content')
+      expect(messageList.totalCount).to.be.a('number')
+    })
   })
 
+  describe('settings', () => {
+    it('returns settings', async () => {
+      const settingsFound = await amioApi.settings.get(channel.id)
+      expect(settingsFound).to.be.an('object')
+    })
+
+    it('patches settings', async () => {
+      const settingsPatched = await amioApi.settings.set(channel.id, {})
+      expect(settingsPatched).to.be.an('object')
+      })
+  })
 
 })
