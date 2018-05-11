@@ -50,14 +50,13 @@ describe('Amio API Connector', function () {
 
     it('list channels', async () => {
       const max = 2
-      const offset = 1
+      const offset = 0
       const params = {max, offset}
 
       const channelList = await amioApi.channels.list(params)
 
       expect(channelList).to.have.all.keys('items', 'totalCount')
       expect(channelList.items).to.be.an('array')
-      // expect(channelList.items.some(item => item.id === channel.id)).to.be.true
       expect(channelList.items[0]).to.include.all.keys('id', 'type', 'name', 'webhook')
       expect(channelList.totalCount).to.be.a('number')
     })
