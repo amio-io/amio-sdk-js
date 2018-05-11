@@ -19,7 +19,7 @@ const contact = {
 describe('Amio API Connector', function () {
 
   describe('API error', () => {
-    it('catches a 422 error', async () => {
+    it('catch a 422 error', async () => {
       await amioApi.messages.send({}, 'wrong access token')
         .then(() => {
           throw new Error('exception was expected')
@@ -72,9 +72,9 @@ describe('Amio API Connector', function () {
       expect(channelOriginal).to.be.an('object')
     })
 
-    it('fails to delete channel', async () => {
-      const channelNotFound = await amioApi.channels.delete(123).catch(e => e.amioApiError.status.code)
-      expect(channelNotFound).to.equal(404)
+    it('fail to delete channel', async () => {
+      const error = await amioApi.channels.delete(123).catch(e => e.amioApiError.status.code)
+      expect(error).to.equal(404)
     })
   })
 
@@ -89,45 +89,16 @@ describe('Amio API Connector', function () {
   })
 
   describe('notifications', () => {
-    it('send a notification', async () => {
-
-      const type = 'typing_on'
-      const notification = await amioApi.notifications.send({
-        channel, contact, type
-      })
-
-      expect(notification).to.eql({
-        channel: {
-          id: channel.id,
-          type: notification.channel.type
-        },
-        contact, type
-      })
+    it('fail to send a notification', async () => {
+      const error = await amioApi.notifications.send({}).catch(e => e.amioApiError.status.code)
+      expect(error).to.equal(422)
     })
   })
 
   describe('messages', () => {
-    it('sends a message', async () => {
-      const content = {
-        type: 'text',
-        payload: 'Test message from Amio SDK'
-      }
-      const metadata = {
-        note: 'Sent by test in Amio SDK'
-      }
-      const sentMessage = await amioApi.messages.send({
-        channel, contact, content, metadata
-      })
-
-      expect(sentMessage.id).to.exist
-
-      expect(omit('id', sentMessage)).to.eql({
-        channel: {
-          id: channel.id,
-          type: sentMessage.channel.type
-        },
-        contact, content, metadata
-      })
+    it('fail to send a message', async () => {
+      const error = await amioApi.messages.send({}).catch(e => e.amioApiError.status.code)
+      expect(error).to.equal(422)
     })
 
     it('list messages', async () => {
@@ -148,12 +119,12 @@ describe('Amio API Connector', function () {
   })
 
   describe('settings', () => {
-    it('returns settings', async () => {
+    it('return settings', async () => {
       const settingsFound = await amioApi.settings.get(channel.id)
       expect(settingsFound).to.be.an('object')
     })
 
-    it('patches settings', async () => {
+    it('patch settings', async () => {
       const settingsPatched = await amioApi.settings.set(channel.id, {})
       expect(settingsPatched).to.be.an('object')
       })
