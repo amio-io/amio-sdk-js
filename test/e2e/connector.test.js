@@ -71,6 +71,11 @@ describe('Amio API Connector', function () {
       const channelOriginal = await amioApi.channels.update(channel.id, {})
       expect(channelOriginal).to.be.an('object')
     })
+
+    it('fails to delete channel', async () => {
+      const channelNotFound = await amioApi.channels.delete(123).catch(e => e.amioApiError.status.code)
+      expect(channelNotFound).to.equal(404)
+    })
   })
 
   describe('contacts', () => {
