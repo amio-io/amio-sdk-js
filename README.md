@@ -117,6 +117,17 @@ module.exports = router
 - [Message Echo](https://docs.amio.io/reference#viber-webhooks-message-echo) 
 - [Postback Received](https://docs.amio.io/reference#viber-webhooks-postback-received) 
 
+## Debugging
+
+To enable logging for debugging purposes, set the following environment variable:
+
+variable | value
+---|---
+process.env.DEBUG | amio-sdk-js:*
+
+To narrow down logs even further, replace the `*` wildcard with a specific endpoint.
+
+
 ## Missing a feature?
 
 File an issue or create a pull request. If you need a quick solution, use the prepared [axios http client](https://github.com/axios/axios):

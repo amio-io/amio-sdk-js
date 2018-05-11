@@ -1,4 +1,4 @@
-const  WebhookRouter = require('../../index').WebhookRouter
+const WebhookRouter = require('../../index').WebhookRouter
 const xHubSignatureUtils = require('../../lib/webhook/x-hub-signature.utils')
 const expect = require('chai').expect
 const moment = require('moment')
