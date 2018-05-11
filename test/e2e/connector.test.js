@@ -61,6 +61,11 @@ describe('Amio API Connector', function () {
       expect(contactList.items[0]).to.include.all.keys('id', 'name')
       expect(contactList.totalCount).to.be.a('number')
     })
+
+    it('fails to delete contact', async () => {
+      const contactNotFound = await amioApi.contacts.delete(channel.id, 123).catch(e => e.amioApiError.status.code)
+      expect(contactNotFound).to.equal(404)
+    })
   })
 
   describe('notifications', () => {
