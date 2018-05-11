@@ -19,7 +19,7 @@ const contact = {
 describe('Amio API Connector', function () {
 
   describe('API error', () => {
-    it('catches a 422 error', async () => {
+    it('catch a 422 error', async () => {
       await amioApi.messages.send({}, 'wrong access token')
         .then(() => {
           throw new Error('exception was expected')
@@ -40,8 +40,45 @@ describe('Amio API Connector', function () {
     })
   })
 
+  describe('channels', () => {
+    it('find a channel', async () => {
+      const channelFound = await amioApi.channels.get(channel.id)
+
+      expect(channelFound).to.include.all.keys('id', 'type', 'name', 'webhook')
+      expect(channelFound.id).to.eql(channel.id)
+    })
+
+    it('list channels', async () => {
+      const max = 2
+      const offset = 0
+      const params = {max, offset}
+
+      const channelList = await amioApi.channels.list(params)
+
+      expect(channelList).to.have.all.keys('items', 'totalCount')
+      expect(channelList.items).to.be.an('array')
+      expect(channelList.items[0]).to.include.all.keys('id', 'type', 'name', 'webhook')
+      expect(channelList.totalCount).to.be.a('number')
+    })
+
+    it('refuse to create channel', async () => {
+      const error = await amioApi.channels.create({}).catch(e => e.amioApiError.status.code)
+      expect(error).to.equal(422)
+    })
+
+    it('return updated channel', async () => {
+      const channelOriginal = await amioApi.channels.update(channel.id, {})
+      expect(channelOriginal).to.be.an('object')
+    })
+
+    it('fail to delete channel', async () => {
+      const error = await amioApi.channels.delete(123).catch(e => e.amioApiError.status.code)
+      expect(error).to.equal(404)
+    })
+  })
+
   describe('contacts', () => {
-    it('finds a contact', async () => {
+    it('find a contact', async () => {
       const contactFound = await amioApi.contacts.get(channel.id, contact.id)
 
       expect(contactFound).to.include.all.keys('id', 'name')
@@ -51,48 +88,19 @@ describe('Amio API Connector', function () {
   })
 
   describe('notifications', () => {
-    it('send a notification', async () => {
-
-      const type = 'typing_on'
-      const notification = await amioApi.notifications.send({
-        channel, contact, type
-      })
-
-      expect(notification).to.eql({
-        channel: {
-          id: channel.id,
-          type: notification.channel.type
-        },
-        contact, type
-      })
+    it('fail to send a notification', async () => {
+      const error = await amioApi.notifications.send({}).catch(e => e.amioApiError.status.code)
+      expect(error).to.equal(422)
     })
   })
 
   describe('messages', () => {
-    it('sends a message', async () => {
-      const content = {
-        type: 'text',
-        payload: 'Test message from Amio SDK'
-      }
-      const metadata = {
-        note: 'Sent by test in Amio SDK'
-      }
-      const sentMessage = await amioApi.messages.send({
-        channel, contact, content, metadata
-      })
-
-      expect(sentMessage.id).to.exist
-
-      expect(omit('id', sentMessage)).to.eql({
-        channel: {
-          id: channel.id,
-          type: sentMessage.channel.type
-        },
-        contact, content, metadata
-      })
+    it('fail to send a message', async () => {
+      const error = await amioApi.messages.send({}).catch(e => e.amioApiError.status.code)
+      expect(error).to.equal(422)
     })
 
-    it('lists messages', async () => {
+    it('list messages', async () => {
       const max = 2
       const offset = 1
       const params = {max, offset}
@@ -110,12 +118,12 @@ describe('Amio API Connector', function () {
   })
 
   describe('settings', () => {
-    it('returns settings', async () => {
+    it('return settings', async () => {
       const settingsFound = await amioApi.settings.get(channel.id)
       expect(settingsFound).to.be.an('object')
     })
 
-    it('patches settings', async () => {
+    it('patch settings', async () => {
       const settingsPatched = await amioApi.settings.set(channel.id, {})
       expect(settingsPatched).to.be.an('object')
       })
