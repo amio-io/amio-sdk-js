@@ -85,6 +85,24 @@ describe('Amio API Connector', function () {
       expect(contactFound).to.have.any.keys('gender', 'locale', 'country', 'time_zone', 'photo_url')
       expect(contactFound.id).to.eql(contact.id)
     })
+
+    it('list contacts', async () => {
+      const max = 2
+      const offset = 0
+      const params = {max, offset}
+
+      const contactList = await amioApi.contacts.list(channel.id, params)
+
+      expect(contactList).to.have.all.keys('items', 'totalCount')
+      expect(contactList.items).to.be.an('array')
+      expect(contactList.items[0]).to.include.all.keys('id', 'name')
+      expect(contactList.totalCount).to.be.a('number')
+    })
+
+    it('fail to delete contact', async () => {
+      const contactNotFound = await amioApi.contacts.delete(channel.id, 123).catch(e => e.amioApiError.status.code)
+      expect(contactNotFound).to.equal(404)
+    })
   })
 
   describe('notifications', () => {
