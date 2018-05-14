@@ -88,7 +88,7 @@ describe('Amio API Connector', function () {
 
     it('list contacts', async () => {
       const max = 2
-      const offset = 1
+      const offset = 0
       const params = {max, offset}
 
       const contactList = await amioApi.contacts.list(channel.id, params)
@@ -99,7 +99,7 @@ describe('Amio API Connector', function () {
       expect(contactList.totalCount).to.be.a('number')
     })
 
-    it('fails to delete contact', async () => {
+    it('fail to delete contact', async () => {
       const contactNotFound = await amioApi.contacts.delete(channel.id, 123).catch(e => e.amioApiError.status.code)
       expect(contactNotFound).to.equal(404)
     })
