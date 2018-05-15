@@ -15,6 +15,9 @@ Let us know how to improve this library. We'll be more than happy if you report 
   - [event types](#webhooks---event-types) 
 - [Missing a feature?](#missing-a-feature)
   
+## Prerequisities
+
+You need to [create an account](https://app.amio.io/signup) before you can use this library.
 
 ## Installation
 
