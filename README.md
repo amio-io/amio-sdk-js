@@ -60,8 +60,13 @@ try{
 
 Method | Arguments | Description | Links
 ---|---|---|-----------------
+**Channels** | | |
+`amioApi.channel.get` | channelId | Get information about specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-get-channel)
+`amioApi.channel.list` | {params} | Get information about specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-list-channels)
 **Contacts** | | |
-`amioApi.contacts.get` | channelId<br> contactId | Get a list of contacts for specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
+`amioApi.contacts.get` | channelId<br> contactId | Get information about a contact in specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
+`amioApi.contacts.list` | channelId<br> {params} | Get a list of contacts for specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-list-contacts)
+`amioApi.contacts.delete` | channelId<br> contactId | Delete a contact within specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-delete-contact)
 **Messages** | | |
 `amioApi.messages.send` | message | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
 `amioApi.messages.list` | channelId<br> contactId<br> params | Get a list of messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [params](https://docs.amio.io/v1.0/reference#pagination)
