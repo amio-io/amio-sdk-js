@@ -64,8 +64,8 @@ amioApi | Description | Links
 `messages.send(message)` | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
 `messages.list(channelId, contactId, {params})` | Get a list of messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [params](https://docs.amio.io/v1.0/reference#pagination)
 
-amioApi.* | Arguments | Description | Links
--|-|-|:-:
+amioApi.* | Description | Links
+-|-|:-:
 `channel.get(channelId)` | Get information about specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-get-channel)
 `channel.list(params)` | Get information about specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-list-channels), [params](https://docs.amio.io/v1.0/reference#pagination)
 `contacts.get(channelId, contactId)` | Get information about a contact in specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
