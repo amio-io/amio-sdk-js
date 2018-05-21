@@ -64,26 +64,22 @@ amioApi | Description | Links
 `messages.send(message)` | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
 `messages.list(channelId, contactId, {params})` | Get a list of messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [params](https://docs.amio.io/v1.0/reference#pagination)
 
-amioApi | Arguments | Description | Links
+amioApi.* | Arguments | Description | Links
 -|-|-|:-:
-**Channels** | | |
-`channel.get` | channelId | Get information about specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-get-channel)
-`channel.list` | {params} | Get information about specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-list-channels)
-**Contacts** | | |
-`contacts.get` | channelId<br> contactId | Get information about a contact in specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
-`contacts.list` | channelId<br> {params} | Get a list of contacts for specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-list-contacts)
-`contacts.delete` | channelId<br> contactId | Delete a contact within specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-delete-contact)
-**Messages** | | |
-`messages.send` | message | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
-`messages.list` | channelId<br> contactId<br> {params} | Get a list of messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [params](https://docs.amio.io/v1.0/reference#pagination)
-**Notifications** | | |
-`notifications.send` | notification | Send a notification to a contact. | [docs](https://docs.amio.io/v1.0/reference#notifications)
+`channel.get(channelId)` | Get information about specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-get-channel)
+`channel.list(params)` | Get information about specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-list-channels), [params](https://docs.amio.io/v1.0/reference#pagination)
+`contacts.get(channelId, contactId)` | Get information about a contact in specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
+`contacts.list(channelId, params)` | Get a list of contacts for specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-list-contacts), [params](https://docs.amio.io/v1.0/reference#pagination)
+`contacts.delete(channelId, contactId)` | Delete a contact within specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-delete-contact)
+`messages.send(message)` | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
+`messages.list(channelId, contactId, params)` | Get a list of messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [params](https://docs.amio.io/v1.0/reference#pagination)
+`notifications.send(notification)` | Send a notification to a contact. | [docs](https://docs.amio.io/v1.0/reference#notifications)
 
 
 ## Webhooks
 
 Central logic to handle webhooks coming from Amio is **WebhookRouter**. What does it do?
-- It responds OK 200 to Amio .
+- It responds OK 200 to Amio.
 - It verifies [X-Hub-Signature](https://docs.amio.io/v1.0/reference#security).
 - It routes events to handlers (e.g. event `message_received` to a method registered in `amioWebhookRouter.onMessageReceived()`)
 
