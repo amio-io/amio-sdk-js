@@ -59,22 +59,17 @@ try{
 ### API - methods
 amioApi.* | Description | Links
 -|-|:-:
-Channels | |
 `channels.get(channelId)` | Get information about specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-get-channel)
 `channels.list(params)` | List available channels. | [docs](https://docs.amio.io/v1.0/reference#channels-list-channels), [params](https://docs.amio.io/v1.0/reference#pagination)
 `channels.create(request)` | Create a new channel. | [docs](https://docs.amio.io/v1.0/reference#channels-create-channel)
 `channels.update(channelId, request)` | Update specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-update-channel)
 `channels.delete(channelId)` | Delete specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-delete-channel)
-Contacts | |
 `contacts.get(channelId, contactId)` | Get information about a contact in specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
 `contacts.list(channelId, params)` | List contacts for specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-list-contacts), [params](https://docs.amio.io/v1.0/reference#pagination)
 `contacts.delete(channelId, contactId)` | Delete a contact within specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-delete-contact)
-Messages | |
 `messages.send(message)` | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
 `messages.list(channelId, contactId, params)` | List messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [params](https://docs.amio.io/v1.0/reference#pagination)
-Notifications | |
 `notifications.send(notification)` | Send a notification to a contact. | [docs](https://docs.amio.io/v1.0/reference#notifications)
-Settings | |
 `settings.get(channelId)` | Get settings for specified channel. | [docs](https://docs.amio.io/v1.0/reference#settings-get-settings)
 `settings.set(channelId, setting)` | Modify settings for specified channel. | [docs](https://docs.amio.io/v1.0/reference#settings-update-settings)
 
