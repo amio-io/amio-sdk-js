@@ -15,6 +15,9 @@ Let us know how to improve this library. We'll be more than happy if you report 
   - [event types](#webhooks---event-types) 
 - [Missing a feature?](#missing-a-feature)
   
+## Prerequisities
+
+You need to [create an account](https://app.amio.io/signup) before you can use this library.
 
 ## Installation
 
@@ -54,22 +57,26 @@ try{
 ```
 
 ### API - methods
-
- HTTP | Endpoint | Method | Arguments | Description | Links
----|---|---|---|---|-----------------
-| | **Contacts** | | |
-GET | /v1/<br>channels/{{channel_id}}/<br>contacts | `contacts.get` | channelId<br> contactId | Get a list of contacts for specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
-| | **Messages** | | |
-POST | /v1/messages | `messages.send` | message | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
-GET | /v1/<br>channels/{{channel_id}}/<br>contacts/{{contact_id}}/<br>messages | `messages.list` | channelId<br> contactId<br> params | Get a list of messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [params](https://docs.amio.io/v1.0/reference#pagination)
-| | **Notifications** | | |
-POST | /v1/notifications | `notifications.send` | notification | Send a notification to a contact. | [docs](https://docs.amio.io/v1.0/reference#notifications)
-
+amioApi.* | Description | Links
+-|-|:-:
+`channels.get(channelId)` | Get information about specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-get-channel)
+`channels.list(params)` | List available channels. | [docs](https://docs.amio.io/v1.0/reference#channels-list-channels), [params](https://docs.amio.io/v1.0/reference#pagination)
+`channels.create(request)` | Create a new channel. | [docs](https://docs.amio.io/v1.0/reference#channels-create-channel)
+`channels.update(channelId, request)` | Update specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-update-channel)
+`channels.delete(channelId)` | Delete specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-delete-channel)
+`contacts.get(channelId, contactId)` | Get information about a contact in specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
+`contacts.list(channelId, params)` | List contacts for specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-list-contacts), [params](https://docs.amio.io/v1.0/reference#pagination)
+`contacts.delete(channelId, contactId)` | Delete a contact within specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-delete-contact)
+`messages.send(message)` | Send a message to a contact. | [docs](https://docs.amio.io/v1.0/reference#messages)
+`messages.list(channelId, contactId, params)` | List messages for specified channel and contact. | [docs](https://docs.amio.io/v1.0/reference#messages-list-messages), [params](https://docs.amio.io/v1.0/reference#pagination)
+`notifications.send(notification)` | Send a notification to a contact. | [docs](https://docs.amio.io/v1.0/reference#notifications)
+`settings.get(channelId)` | Get settings for specified channel. | [docs](https://docs.amio.io/v1.0/reference#settings-get-settings)
+`settings.set(channelId, setting)` | Modify settings for specified channel. | [docs](https://docs.amio.io/v1.0/reference#settings-update-settings)
 
 ## Webhooks
 
 Central logic to handle webhooks coming from Amio is **WebhookRouter**. What does it do?
-- It responds OK 200 to Amio .
+- It responds OK 200 to Amio.
 - It verifies [X-Hub-Signature](https://docs.amio.io/v1.0/reference#security).
 - It routes events to handlers (e.g. event `message_received` to a method registered in `amioWebhookRouter.onMessageReceived()`)
 
