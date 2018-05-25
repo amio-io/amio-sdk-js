@@ -100,6 +100,7 @@ amioWebhookRouter.onMessagesDelivered((data, timestamp) => {/* TODO */})
 amioWebhookRouter.onMessagesRead((data, timestamp) => {/* TODO */})
 amioWebhookRouter.onMessageEcho((data, timestamp) => {/* TODO */})
 amioWebhookRouter.onPostbackReceived((data, timestamp) => {/* TODO */})
+amioWebhookRouter.onOptIn((data, timestamp) => {/* TODO */})
 
 router.post('/webhooks/amio', (req, res) => amioWebhookRouter.handleEvent(req, res))
 
