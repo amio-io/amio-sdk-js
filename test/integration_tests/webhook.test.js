@@ -14,55 +14,63 @@ describe('Webhooks', function () {
     webhookRouter = new WebhookRouter(settings)
   })
 
-  it('EVENT message_received', async () => {
+  it('EVENT message_received', (done) => {
     const event = 'message_received'
     const testTimestamp = '2016-10-06T13:42:48Z'
     const messageId = '151730312500791'
     const webhookEvent = createEventMessageReceived(event, testTimestamp, messageId)
 
-    await testWebhook(webhookRouter.onMessageReceived.bind(webhookRouter), testTimestamp, webhookEvent)
+    testWebhook(webhookRouter.onMessageReceived.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 
-  it('EVENT message_echo', async () => {
+  it('EVENT message_echo', done => {
     const event = 'message_echo'
     const testTimestamp = '2016-11-06T13:42:48Z'
     const messageId = '151730312500800'
     const webhookEvent = createEventMessageReceived(event, testTimestamp, messageId)
 
-    await testWebhook(webhookRouter.onMessageEcho.bind(webhookRouter), testTimestamp, webhookEvent)
+    testWebhook(webhookRouter.onMessageEcho.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 
-  it('EVENT message_delivered', async () => {
+  it('EVENT message_delivered', done => {
     const testTimestamp = '2016-11-06T13:42:48Z'
     const messageId = '151730312500800'
     const webhookEvent = createEventMessagesDelivered(testTimestamp, messageId)
 
-    await testWebhook(webhookRouter.onMessagesDelivered.bind(webhookRouter), testTimestamp, webhookEvent)
+    testWebhook(webhookRouter.onMessagesDelivered.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 
 
-  it('EVENT message_read', async () => {
+  it('EVENT message_read', done => {
     const testTimestamp = '2016-11-06T13:42:48Z'
     const lastReadTimestamp = moment()
     const webhookEvent = createEventMessagesRead(testTimestamp, lastReadTimestamp)
 
-    await testWebhook(webhookRouter.onMessagesRead.bind(webhookRouter), testTimestamp, webhookEvent)
+    testWebhook(webhookRouter.onMessagesRead.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 
-  it('EVENT postback', async () => {
+  it('EVENT postback', done => {
     const testTimestamp = '2016-11-06T13:42:48Z'
     const webhookEvent = createEventPostback(testTimestamp)
 
-    await testWebhook(webhookRouter.onPostbackReceived.bind(webhookRouter), testTimestamp, webhookEvent)
+    testWebhook(webhookRouter.onPostbackReceived.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 
-  it('EVENT opt_in', async () => {
+  it('EVENT opt_in', done => {
     const testTimestamp = '2016-11-06T13:42:48Z'
     const webhookEvent = OptIn(testTimestamp)
 
-    await testWebhook(webhookRouter.onOptIn.bind(webhookRouter), testTimestamp, webhookEvent)
+    testWebhook(webhookRouter.onOptIn.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
 })
+
+function verifyWebhookEvent(testTimestamp, eventData, done) {
+  return async (data, timestamp) => {
+    expect(timestamp).to.eql(testTimestamp)
+    expect(data).to.eql(eventData)
+    done()
+  }
+}
 
 function createEventMessageReceived (event, timestamp, id) {
   return {
@@ -157,17 +165,13 @@ function createEventMessagesRead (timestamp, lastReadTimestamp) {
   }
 }
 
-const Handler = () => async (data, timestamp) => ({data, timestamp})
-
-async function testWebhook(onMethod, testTimestamp, webhookEvent) {
-  onMethod(Handler())
+function testWebhook(onMethod, testTimestamp, webhookEvent, done) {
+  onMethod(verifyWebhookEvent(testTimestamp, webhookEvent.data, done))
   const req = {
     header: () => xHubSignatureUtils.calculateXHubSignature('test-secret', JSON.stringify(webhookEvent)),
     body: webhookEvent
   }
   const res = {sendStatus: () => {}}
-  const {data, timestamp} = await webhookRouter.handleEvent(req, res)
-
-  expect(timestamp).to.eql(testTimestamp)
-  expect(data).to.eql(webhookEvent.data)
+  webhookRouter.handleEvent(req, res)
+    .catch (e => done(e))
 }
