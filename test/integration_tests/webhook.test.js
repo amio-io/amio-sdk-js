@@ -55,6 +55,13 @@ describe('Webhooks', function () {
 
     testWebhook(webhookRouter.onPostbackReceived.bind(webhookRouter), testTimestamp, webhookEvent, done)
   })
+
+  it('EVENT opt_in', done => {
+    const testTimestamp = '2016-11-06T13:42:48Z'
+    const webhookEvent = OptIn(testTimestamp)
+
+    testWebhook(webhookRouter.onOptIn.bind(webhookRouter), testTimestamp, webhookEvent, done)
+  })
 })
 
 function verifyWebhookEvent(testTimestamp, eventData, done) {
@@ -123,6 +130,24 @@ function createEventMessagesDelivered (timestamp, id) {
   }
 }
 
+const OptIn = (timestamp) => ({
+  event: 'opt_in',
+  timestamp,
+  data: {
+  channel: {
+    id: '151730312500791',
+      type: 'facebook_messenger'
+    },
+  contact: {
+    id: '1419024554891329'
+    },
+  opt_in: {
+    type: 'send_to_messenger',
+      payload: 'test payload'
+    }
+  }
+})
+
 function createEventMessagesRead (timestamp, lastReadTimestamp) {
   return {
     event: 'messages_read',
@@ -148,4 +173,5 @@ function testWebhook(onMethod, testTimestamp, webhookEvent, done) {
   }
   const res = {sendStatus: () => {}}
   webhookRouter.handleEvent(req, res)
+    .catch (e => done(e))
 }
