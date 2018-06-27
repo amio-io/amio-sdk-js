@@ -65,7 +65,7 @@ describe('Webhooks', function () {
 })
 
 function verifyWebhookEvent(testTimestamp, eventData, done) {
-  return async (webhook) => {
+  return async webhook => {
     expect(webhook.timestamp).to.eql(testTimestamp)
     expect(webhook.data).to.eql(eventData)
     done()
