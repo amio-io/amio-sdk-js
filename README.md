@@ -95,12 +95,12 @@ const amioWebhookRouter = new WebhookRouter({
 amioWebhookRouter.onError(error => console.error(error))
 
 // assign event handlers 
-amioWebhookRouter.onMessageReceived((webhook) => console.log('a new message from contact ${data.contact.id} was received!'))
-amioWebhookRouter.onMessagesDelivered((webhook) => {/* TODO */})
-amioWebhookRouter.onMessagesRead((webhook) => {/* TODO */})
-amioWebhookRouter.onMessageEcho((webhook) => {/* TODO */})
-amioWebhookRouter.onPostbackReceived((webhook) => {/* TODO */})
-amioWebhookRouter.onOptIn((webhook) => {/* TODO */})
+amioWebhookRouter.onMessageReceived(webhook => console.log('a new message from contact ${data.contact.id} was received!'))
+amioWebhookRouter.onMessagesDelivered(webhook => {/* TODO */})
+amioWebhookRouter.onMessagesRead(webhook => {/* TODO */})
+amioWebhookRouter.onMessageEcho(webhook => {/* TODO */})
+amioWebhookRouter.onPostbackReceived(webhook => {/* TODO */})
+amioWebhookRouter.onOptIn(webhook => {/* TODO */})
 
 router.post('/webhooks/amio', (req, res) => amioWebhookRouter.handleEvent(req, res))
 
