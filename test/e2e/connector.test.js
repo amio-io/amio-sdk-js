@@ -20,7 +20,7 @@ describe('Amio API Connector', function () {
 
   describe('API error', () => {
     it('catch a 422 error', async () => {
-      await amioApi.messages.send({}, 'wrong access token')
+      await amioApi.messages.send({}, {accessToken: 'wrong access token'})
         .then(() => {
           throw new Error('exception was expected')
         })
