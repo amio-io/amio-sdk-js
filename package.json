@@ -2,17 +2,18 @@
   "name": "amio-sdk-js",
   "version": "2.1.0",
   "scripts": {
-    "test": "mocha test/**/*.test.js"
+    "test": "mocha test/**/*.test.js",
+    "can-publish-nix": "npm info $npm_package_name version | npm-version-bump-checker"
   },
   "dependencies": {
     "axios": "0.17.1",
     "debug": "3.1.0",
-    "npm-version-bump-checker": "^1.0.4",
     "ramda": "0.24.1"
   },
   "devDependencies": {
     "chai": "4.1.2",
     "mocha": "5.1.0",
-    "moment": "2.22.0"
+    "moment": "2.22.0",
+    "npm-version-bump-checker": "1.0.4"
   }
 }
