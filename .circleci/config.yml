@@ -24,3 +24,7 @@ jobs:
       - run:
           name: Tests
           command: npm run-script test
+
+      - run:
+          name: Can publish to NPM?
+          command: npm run-script can-publish-nix
