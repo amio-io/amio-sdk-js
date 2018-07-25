@@ -1,6 +1,6 @@
 {
   "name": "amio-sdk-js",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "scripts": {
     "test": "mocha test/**/*.test.js",
     "can-publish-nix": "npm info $npm_package_name version | npm-version-bump-checker"

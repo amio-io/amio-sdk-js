@@ -2,16 +2,48 @@ const WebhookRouter = require('../../index').WebhookRouter
 const xHubSignatureUtils = require('../../lib/webhook/x-hub-signature.utils')
 const expect = require('chai').expect
 const moment = require('moment')
+const timeout = ms => new Promise(res => setTimeout(res, ms))
 
 let webhookRouter = null
+const channelIdOk = '151730312500791'
 
 describe('Webhooks', function () {
 
   before(function () {
     const settings = {
-      secretToken: 'test-secret'
+      secrets: {
+        [channelIdOk]: 'test-secret'
+      }
     }
     webhookRouter = new WebhookRouter(settings)
+  })
+
+  it('ERROR wrong secret for a channel', done => {
+    const webhookEvent = createError(channelIdOk, `Failed to verify X-Hub-Signature for "channel.id" ${channelIdOk}`)
+    webhookRouter = new WebhookRouter({
+      secrets: {
+        [channelIdOk]: 'test-secret'
+      }
+    })
+    testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, done, 'wrong-secret')
+  })
+
+  it('ERROR secret not set for a channel', done => {
+    const channelId = 'non-existent-channel-id'
+    const webhookEvent = createError(channelId, `Failed to verify X-Hub-Signature. Channel with id "non-existent-channel-id" is missing webhook secret.`)
+    webhookRouter = new WebhookRouter({
+      secrets: {
+        [channelIdOk]: 'test-secret'
+      }
+    })
+    testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, done, 'wrong-secret')
+  })
+
+  it('ERROR no secret specified', () => {
+    expect(() => new WebhookRouter()).to.throw('Define at least 1 secret.')
+    expect(() => new WebhookRouter({})).to.throw('Define at least 1 secret.')
+    expect(() => new WebhookRouter({secrets: {}})).to.throw('Define at least 1 secret.')
+    expect(() => new WebhookRouter({secrets: {'channel': 'secret'}})).to.not.throw()
   })
 
   it('EVENT message_received', (done) => {
@@ -72,14 +104,21 @@ function verifyWebhookEvent(testTimestamp, eventData, done) {
   }
 }
 
-function createEventMessageReceived (event, timestamp, id) {
+function verifyError(eventData, done) {
+  return async webhook => {
+    expect(webhook.data.error).to.eql(eventData.error)
+    done()
+  }
+}
+
+function createEventMessageReceived(event, timestamp, id) {
   return {
     event,
     timestamp,
     data: {
       id,
       channel: {
-        id: '151730312500791',
+        id: channelIdOk,
         type: 'facebook_messenger',
         name: 'Amio Tests'
       },
@@ -100,7 +139,7 @@ function createEventPostback(timestamp) {
     timestamp,
     data: {
       channel: {
-        id: '151730312500791',
+        id: channelIdOk,
         type: 'facebook_messenger',
       },
       contact: {
@@ -113,13 +152,13 @@ function createEventPostback(timestamp) {
   }
 }
 
-function createEventMessagesDelivered (timestamp, id) {
+function createEventMessagesDelivered(timestamp, id) {
   return {
     event: 'messages_delivered',
     timestamp,
     data: {
       channel: {
-        id: '151730312500791',
+        id: channelIdOk,
         type: 'facebook_messenger',
       },
       contact: {
@@ -134,27 +173,27 @@ const OptIn = (timestamp) => ({
   event: 'opt_in',
   timestamp,
   data: {
-  channel: {
-    id: '151730312500791',
+    channel: {
+      id: channelIdOk,
       type: 'facebook_messenger'
     },
-  contact: {
-    id: '1419024554891329'
+    contact: {
+      id: '1419024554891329'
     },
-  opt_in: {
-    type: 'send_to_messenger',
+    opt_in: {
+      type: 'send_to_messenger',
       payload: 'test payload'
     }
   }
 })
 
-function createEventMessagesRead (timestamp, lastReadTimestamp) {
+function createEventMessagesRead(timestamp, lastReadTimestamp) {
   return {
     event: 'messages_read',
     timestamp: timestamp,
     data: {
       channel: {
-        id: '151730312500791',
+        id: channelIdOk,
         type: 'facebook_messenger',
       },
       contact: {
@@ -165,13 +204,48 @@ function createEventMessagesRead (timestamp, lastReadTimestamp) {
   }
 }
 
-function testWebhook(onMethod, testTimestamp, webhookEvent, done) {
-  onMethod(verifyWebhookEvent(testTimestamp, webhookEvent.data, done))
+function createError(channelId, error) {
+  return {
+    event: 'webhook_error',
+    data: {
+      channel: {
+        id: channelId
+      },
+      error
+    }
+  }
+}
+
+async function testError(onMethod, webhookEvent, done, secret) {
+  await onMethod(verifyError(webhookEvent.data, done))
   const req = {
-    header: () => xHubSignatureUtils.calculateXHubSignature('test-secret', JSON.stringify(webhookEvent)),
+    header: () => xHubSignatureUtils.calculateXHubSignature(secret, JSON.stringify(webhookEvent)),
     body: webhookEvent
   }
-  const res = {sendStatus: () => {}}
-  webhookRouter.handleEvent(req, res)
-    .catch (e => done(e))
+  const res = {
+    sendStatus: () => {
+    }
+  }
+  await webhookRouter.handleEvent(req, res)
+    .catch(e => {
+      done(e)
+    })
+
+}
+
+async function testWebhook(onMethod, testTimestamp, webhookEvent, done, secret = 'test-secret') {
+  await timeout(100)
+  onMethod(verifyWebhookEvent(testTimestamp, webhookEvent.data, done))
+  const req = {
+    header: () => xHubSignatureUtils.calculateXHubSignature(secret, JSON.stringify(webhookEvent)),
+    body: webhookEvent
+  }
+  const res = {
+    sendStatus: () => {
+    }
+  }
+  await webhookRouter.handleEvent(req, res)
+    .catch(e => {
+      done(e)
+    })
 }
