@@ -2,6 +2,7 @@ const WebhookRouter = require('../../index').WebhookRouter
 const xHubSignatureUtils = require('../../lib/webhook/x-hub-signature.utils')
 const expect = require('chai').expect
 const moment = require('moment')
+const timeout = ms => new Promise(res => setTimeout(res, ms))
 
 let webhookRouter = null
 const channelIdOk = '151730312500791'
@@ -17,22 +18,32 @@ describe('Webhooks', function () {
     webhookRouter = new WebhookRouter(settings)
   })
 
-  it('ERROR no secret specified', () => {
-    expect(() => new WebhookRouter()).to.throw('Define at least 1 secret.')
-    expect(() => new WebhookRouter({})).to.throw('Define at least 1 secret.')
-    expect(() => new WebhookRouter({secrets: {}})).to.throw('Define at least 1 secret.')
-    expect(() => new WebhookRouter({secrets: {'channel': 'secret'}})).to.not.throw()
+  it('ERROR wrong secret for a channel', done => {
+    const webhookEvent = createError(channelIdOk, `Failed to verify X-Hub-Signature for "channel.id" ${channelIdOk}`)
+    webhookRouter = new WebhookRouter({
+      secrets: {
+        [channelIdOk]: 'test-secret'
+      }
+    })
+    testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, done, 'wrong-secret')
   })
 
   it('ERROR secret not set for a channel', done => {
     const channelId = 'non-existent-channel-id'
     const webhookEvent = createError(channelId, `Failed to verify X-Hub-Signature. Channel with id "non-existent-channel-id" is missing webhook secret.`)
+    webhookRouter = new WebhookRouter({
+      secrets: {
+        [channelIdOk]: 'test-secret'
+      }
+    })
     testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, done, 'wrong-secret')
   })
 
-  it('ERROR wrong secret for a channel', done => {
-    const webhookEvent = createError(channelIdOk, `Failed to verify X-Hub-Signature for "channel.id" ${channelIdOk}`)
-    testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, done, 'wrong-secret')
+  it('ERROR no secret specified', () => {
+    expect(() => new WebhookRouter()).to.throw('Define at least 1 secret.')
+    expect(() => new WebhookRouter({})).to.throw('Define at least 1 secret.')
+    expect(() => new WebhookRouter({secrets: {}})).to.throw('Define at least 1 secret.')
+    expect(() => new WebhookRouter({secrets: {'channel': 'secret'}})).to.not.throw()
   })
 
   it('EVENT message_received', (done) => {
@@ -205,8 +216,8 @@ function createError(channelId, error) {
   }
 }
 
-function testError(onMethod, webhookEvent, done, secret) {
-  onMethod(verifyError(webhookEvent.data, done))
+async function testError(onMethod, webhookEvent, done, secret) {
+  await onMethod(verifyError(webhookEvent.data, done))
   const req = {
     header: () => xHubSignatureUtils.calculateXHubSignature(secret, JSON.stringify(webhookEvent)),
     body: webhookEvent
@@ -215,14 +226,15 @@ function testError(onMethod, webhookEvent, done, secret) {
     sendStatus: () => {
     }
   }
-  webhookRouter.handleEvent(req, res)
+  await webhookRouter.handleEvent(req, res)
     .catch(e => {
       done(e)
     })
 
 }
 
-function testWebhook(onMethod, testTimestamp, webhookEvent, done, secret = 'test-secret') {
+async function testWebhook(onMethod, testTimestamp, webhookEvent, done, secret = 'test-secret') {
+  await timeout(100)
   onMethod(verifyWebhookEvent(testTimestamp, webhookEvent.data, done))
   const req = {
     header: () => xHubSignatureUtils.calculateXHubSignature(secret, JSON.stringify(webhookEvent)),
@@ -232,7 +244,7 @@ function testWebhook(onMethod, testTimestamp, webhookEvent, done, secret = 'test
     sendStatus: () => {
     }
   }
-  webhookRouter.handleEvent(req, res)
+  await webhookRouter.handleEvent(req, res)
     .catch(e => {
       done(e)
     })
