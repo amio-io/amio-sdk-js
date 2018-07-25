@@ -14,6 +14,14 @@ describe('Webhooks', function () {
     webhookRouter = new WebhookRouter(settings)
   })
 
+  it('ERROR - wrong webhook secret', done => {
+    const event = 'message_received'
+    const testTimestamp = '2016-10-06T13:42:48Z'
+    const messageId = '151730312500791'
+    const webhookEvent = createError(testTimestamp, 'Failed to verify X-Hub-Signature.')
+    testWebhook(webhookRouter.onError.bind(webhookRouter), testTimestamp, webhookEvent, done, 'wrong-secret')
+  })
+
   it('EVENT message_received', (done) => {
     const event = 'message_received'
     const testTimestamp = '2016-10-06T13:42:48Z'
@@ -66,7 +74,6 @@ describe('Webhooks', function () {
 
 function verifyWebhookEvent(testTimestamp, eventData, done) {
   return async webhook => {
-    expect(webhook.timestamp).to.eql(testTimestamp)
     expect(webhook.data).to.eql(eventData)
     done()
   }
@@ -165,13 +172,25 @@ function createEventMessagesRead (timestamp, lastReadTimestamp) {
   }
 }
 
-function testWebhook(onMethod, testTimestamp, webhookEvent, done) {
+function createError (timestamp, error) {
+  return {
+    event: 'messages_read',
+    timestamp: timestamp,
+    data: {
+      error
+    }
+  }
+}
+
+function testWebhook(onMethod, testTimestamp, webhookEvent, done, secret = 'test-secret') {
   onMethod(verifyWebhookEvent(testTimestamp, webhookEvent.data, done))
   const req = {
-    header: () => xHubSignatureUtils.calculateXHubSignature('test-secret', JSON.stringify(webhookEvent)),
+    header: () => xHubSignatureUtils.calculateXHubSignature(secret, JSON.stringify(webhookEvent)),
     body: webhookEvent
   }
   const res = {sendStatus: () => {}}
   webhookRouter.handleEvent(req, res)
-    .catch (e => done(e))
+    .catch (e => {
+      done(e)
+    })
 }
