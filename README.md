@@ -123,13 +123,23 @@ module.exports = router
 - [Postback Received](https://docs.amio.io/reference#facebook-messeger-webhooks-postback-received) 
 - [Opt-in](https://docs.amio.io/reference#facebook-messeger-webhooks-opt-in)
 
-**Viber:**
+**Viber Bot:**
 - [Message Received](https://docs.amio.io/reference#viber-webhooks-message-received)
 - [Messages Delivered](https://docs.amio.io/reference#viber-webhooks-messages-delivered) 
-- [Message Failed](https://docs.amio.io/reference#viber-webhooks-message-failed) 
 - [Messages Read](https://docs.amio.io/reference#viber-webhooks-messages-read) 
 - [Message Echo](https://docs.amio.io/reference#viber-webhooks-message-echo) 
 - [Postback Received](https://docs.amio.io/reference#viber-webhooks-postback-received) 
+
+**Viber Business Messages:**
+- [Messages Delivered](https://docs.amio.io/reference#viber-business-webhooks-messages-delivered) 
+- [Messages Read](https://docs.amio.io/reference#viber-business-webhooks-messages-read) 
+- [Message Failed](https://docs.amio.io/reference#viber-business-webhooks-message-failed) 
+- [Message Echo](https://docs.amio.io/reference#viber-business-webhooks-message-echo) 
+
+**SMS:**
+- [Message Received](https://docs.amio.io/reference#mobile-webhooks-message-received) 
+- [Messages Delivered](https://docs.amio.io/reference#mobile-webhooks-messages-delivered) 
+- [Message Failed](https://docs.amio.io/reference#mobile-webhooks-message-failed) 
 
 ## Debugging
 
