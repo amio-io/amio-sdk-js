@@ -1,8 +1,6 @@
 const config = require('../config')
 const {AmioApi} = require('../../index')
 const expect = require('chai').expect
-const omit = require('ramda/src/omit')
-const assoc = require('ramda/src/assoc')
 
 const settings = {
   accessToken: config.CONNECTOR_ACCESS_TOKEN
