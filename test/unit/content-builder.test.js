@@ -7,8 +7,27 @@ const quick_replies = [quickReply]
 describe('ContentBuilder', () => {
 
   describe('GenericBuilder', () => {
+    it('creates an empty message', () => {
+      const content = ContentBuilder.typeGeneric()
+        .build();
 
+      expect(content).to.eql({
+        type: null,
+        payload: {}
+      })
+    })
 
+    it('creates a non-empty message', () => {
+      const content = ContentBuilder.typeGeneric('xxx', 'text')
+        .addQuickReply(quickReply)
+        .build();
+
+      expect(content).to.eql({
+        type: 'text',
+        payload: 'xxx',
+        quick_replies
+      })
+    })
   })
 
   describe('TextBuilder', () => {
