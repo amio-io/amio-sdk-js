@@ -3,8 +3,59 @@ const expect = require('chai').expect
 
 const quickReply = {type: 'location'}
 const quick_replies = [quickReply]
+const url = 'https://amio.io';
 
 describe('ContentBuilder', () => {
+
+  describe('FileBuilder', () => {
+    it('creates an audio content', () => {
+      const content = ContentBuilder.typeAudio(url)
+        .addQuickReply(quickReply)
+        .build()
+
+      expect(content).to.eql({
+        type: 'audio',
+        payload: url,
+        quick_replies
+      })
+    })
+
+    it('creates an image content', () => {
+      const content = ContentBuilder.typeImage(url)
+        .addQuickReply(quickReply)
+        .build()
+
+      expect(content).to.eql({
+        type: 'image',
+        payload: url,
+        quick_replies
+      })
+    })
+
+    it('creates a video content', () => {
+      const content = ContentBuilder.typeVideo(url)
+        .addQuickReply(quickReply)
+        .build()
+
+      expect(content).to.eql({
+        type: 'video',
+        payload: url,
+        quick_replies
+      })
+    })
+
+    it('creates a file content', () => {
+      const content = ContentBuilder.typeFile(url)
+        .addQuickReply(quickReply)
+        .build()
+
+      expect(content).to.eql({
+        type: 'file',
+        payload: url,
+        quick_replies
+      })
+    })
+  })
 
   describe('GenericBuilder', () => {
     it('creates an empty message', () => {
@@ -48,7 +99,7 @@ describe('ContentBuilder', () => {
         .setText('text')
         .setTitle('title')
         .addButtonPostback('postback', 'payload')
-        .addButtonUrl('url', 'https://amio.io')
+        .addButtonUrl('url', url)
         .addButtonCall('phone', '+0123456789')
         .addQuickReply(quickReply)
         .build();
@@ -60,7 +111,7 @@ describe('ContentBuilder', () => {
           title: 'title',
           buttons: [
             {type: 'postback', title: 'postback', payload: 'payload'},
-            {type: 'url', title: 'url', payload: 'https://amio.io'},
+            {type: 'url', title: 'url', payload: url},
             {type: 'phone', title: 'phone', payload: '+0123456789'},
           ]
         },
