@@ -64,7 +64,7 @@ amioApi.* | Description | Links
 `channels.list(params)` | List available channels. | [docs](https://docs.amio.io/v1.0/reference#channels-list-channels), [params](https://docs.amio.io/v1.0/reference#pagination)
 `channels.create(request)` | Create a new channel. | [docs](https://docs.amio.io/v1.0/reference#channels-create-channel)
 `channels.update(channelId, request)` | Update specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-update-channel)
-`channels.delete(channelId)` | Delete specified channel. | [sdk-docs](https://docs.amio.io/v1.0/reference#channels-delete-channel)
+`channels.delete(channelId)` | Delete specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-delete-channel)
 `contentBuilder.typeAudio(url)` | Start builder for Audio content. | [sdk-docs](#api---content-builders) 
 `contentBuilder.typeFile(url)` | Start builder for File content. | [sdk-docs](#api---content-builders) 
 `contentBuilder.typeGeneric(payload, type)` | Start builder for any content. | [sdk-docs](#api---content-builders) 
