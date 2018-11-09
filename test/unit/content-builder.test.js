@@ -121,16 +121,16 @@ describe('contentBuilder', () => {
 
     it('2 cards', () => {
       const content = contentBuilder.typeStructure()
-        .setText('text')
+        .setText('card 1')
         .addNextCard()
-        .setText('text2')
+        .setText('card 2')
         .build();
 
       expect(content).to.eql({
         type: 'structure',
         payload: [
-          {text: 'text'},
-          {text: 'text2'}
+          {text: 'card 1'},
+          {text: 'card 2'}
         ]
       })
     })

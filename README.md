@@ -89,7 +89,7 @@ pick the right builder for the right platform.
 For example, you can add a location quick reply to your question:
 ```js
 const content = amioApi.contentBuilder.typeText('Where are you now?')
-  .addQuickReply({type: 'location'})
+  .addQuickReply('location')
   .build()
   
 assertEquals(content, {
@@ -106,7 +106,7 @@ amioApi.messages.send({channel, contanct, content})
 
 All available builders have these methods:
 - `addQuickReply(quickReply)` - adds a quick reply according to [docs](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-quick-replies) 
-- `addQuickReply(type)` - adds a quick reply for type of *location*, *email* or *phone_number*  
+- `addQuickReply(type)` - adds a quick reply for type of *location*, *email* or *phone_number*. Suitable for quickReplies with `type` field only. 
 - `build()` - returns final content
 
 Available builders are:
@@ -116,6 +116,23 @@ Available builders are:
   - `contentBuilder.typeStructure()`
     - use `.addNextCard()` to create a [horizontal scroll](https://docs.amio.io/reference#facebook-messenger-messages-structure-horizontal-scroll)
   - `contentBuilder.typeText(text)`
+
+#### API - content builders - horizontal scroll
+```js
+const content = contentBuilder.typeStructure()
+        .setText('card 1')
+        .addNextCard()
+        .setText('card 2')
+        .build();
+
+assertEquals(content, {
+  type: 'structure',
+  payload: [
+    {text: 'card 1'},
+    {text: 'card 2'}
+  ]
+})
+```
 
 ## Webhooks
 
