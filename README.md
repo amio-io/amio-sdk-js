@@ -99,6 +99,11 @@ assertEquals(content, {
 })
 ```
 
+Then you just send the `content` in the message: 
+```js
+amioApi.messages.send({channel, contanct, content})
+```
+
 All available builders have these methods:
 - `addQuickReply(quickReply)` - adds a quick reply according to [docs](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-quick-replies) 
 - `addQuickReply(type)` - adds a quick reply for type of *location*, *email* or *phone_number*  
