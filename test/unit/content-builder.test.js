@@ -15,7 +15,7 @@ describe('contentBuilder', () => {
 
       expect(content).to.eql({
         type: 'audio',
-        payload: url,
+        payload: {url: url},
         quick_replies
       })
     })
@@ -27,7 +27,7 @@ describe('contentBuilder', () => {
 
       expect(content).to.eql({
         type: 'image',
-        payload: url,
+        payload: {url},
         quick_replies
       })
     })
@@ -39,7 +39,7 @@ describe('contentBuilder', () => {
 
       expect(content).to.eql({
         type: 'video',
-        payload: url,
+        payload: {url},
         quick_replies
       })
     })
@@ -51,7 +51,7 @@ describe('contentBuilder', () => {
 
       expect(content).to.eql({
         type: 'file',
-        payload: url,
+        payload: {url},
         quick_replies
       })
     })
