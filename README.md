@@ -114,22 +114,22 @@ Available builders are:
   - `contentBuilder.typeImage(url)`
   - `contentBuilder.typeVideo(url)`
   - `contentBuilder.typeStructure()`
-    - use `.addNextCard()` to create a [horizontal scroll](https://docs.amio.io/reference#facebook-messenger-messages-structure-horizontal-scroll)
+    - use `.addNextStructure()` to create a [horizontal scroll](https://docs.amio.io/reference#facebook-messenger-messages-structure-horizontal-scroll)
   - `contentBuilder.typeText(text)`
 
 #### API - content builders - horizontal scroll
 ```js
 const content = contentBuilder.typeStructure()
-        .setText('card 1')
-        .addNextCard()
-        .setText('card 2')
+        .setText('structure 1')
+        .addNextStructure()
+        .setText('structure 2')
         .build();
 
 assertEquals(content, {
   type: 'structure',
   payload: [
-    {text: 'card 1'},
-    {text: 'card 2'}
+    {text: 'structure 1'},
+    {text: 'structure 2'}
   ]
 })
 ```

@@ -94,7 +94,7 @@ describe('contentBuilder', () => {
 
   describe('StructureBuilder', () => {
 
-    it('1 card with all fields', () => {
+    it('1 structure with all fields', () => {
       const content = contentBuilder.typeStructure()
         .setText('text')
         .setTitle('title')
@@ -119,18 +119,18 @@ describe('contentBuilder', () => {
       })
     })
 
-    it('2 cards', () => {
+    it('2 structures', () => {
       const content = contentBuilder.typeStructure()
-        .setText('card 1')
-        .addNextCard()
-        .setText('card 2')
+        .setText('structure 1')
+        .addNextStructure()
+        .setText('structure 2')
         .build();
 
       expect(content).to.eql({
         type: 'structure',
         payload: [
-          {text: 'card 1'},
-          {text: 'card 2'}
+          {text: 'structure 1'},
+          {text: 'structure 2'}
         ]
       })
     })
