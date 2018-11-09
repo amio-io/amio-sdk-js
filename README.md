@@ -10,6 +10,7 @@ Let us know how to improve this library. We'll be more than happy if you report 
   - [setup & usage](#api---setup--usage)
   - [error handling](#api---error-handling)
   - [methods](#api---methods)
+  - [content builders](#api---content-builders)
 - [Webhooks](#webhooks)
   - [setup & usage](#webhooks---setup--usage)
   - [event types](#webhooks---event-types) 
@@ -63,7 +64,14 @@ amioApi.* | Description | Links
 `channels.list(params)` | List available channels. | [docs](https://docs.amio.io/v1.0/reference#channels-list-channels), [params](https://docs.amio.io/v1.0/reference#pagination)
 `channels.create(request)` | Create a new channel. | [docs](https://docs.amio.io/v1.0/reference#channels-create-channel)
 `channels.update(channelId, request)` | Update specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-update-channel)
-`channels.delete(channelId)` | Delete specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-delete-channel)
+`channels.delete(channelId)` | Delete specified channel. | [sdk-docs](https://docs.amio.io/v1.0/reference#channels-delete-channel)
+`contentBuilder.typeAudio(url)` | Start builder for Audio content. | [sdk-docs](#api---content-builders) 
+`contentBuilder.typeFile(url)` | Start builder for File content. | [sdk-docs](#api---content-builders) 
+`contentBuilder.typeGeneric(payload, type)` | Start builder for any content. | [sdk-docs](#api---content-builders) 
+`contentBuilder.typeImage(url)` | Start builder for Image content. | [sdk-docs](#api---content-builders) 
+`contentBuilder.typeVideo(url)` | Start builder for Video content. | [sdk-docs](#api---content-builders) 
+`contentBuilder.typeStructure()` | Start builder for Structure content. | [sdk-docs](#api---content-builders) 
+`contentBuilder.typeText(text)` | Start builder for Text content. | [sdk-docs](#api---content-builders) 
 `contacts.get(channelId, contactId)` | Get information about a contact in specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
 `contacts.list(channelId, params)` | List contacts for specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-list-contacts), [params](https://docs.amio.io/v1.0/reference#pagination)
 `contacts.delete(channelId, contactId)` | Delete a contact within specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-delete-contact)
@@ -72,6 +80,37 @@ amioApi.* | Description | Links
 `notifications.send(notification)` | Send a notification to a contact. | [docs](https://docs.amio.io/v1.0/reference#notifications)
 `settings.get(channelId)` | Get settings for specified channel. | [docs](https://docs.amio.io/v1.0/reference#settings-get-settings)
 `settings.set(channelId, setting)` | Modify settings for specified channel. | [docs](https://docs.amio.io/v1.0/reference#settings-update-settings)
+
+### API - content builders
+
+Use content-builders to better structure your code. The builders represent all available message types and it's up to you
+pick the right builder for the right platform. 
+
+For example, you can add a location quick reply to your question:
+```js
+const content = amioApi.contentBuilder.typeText('Where are you now?')
+  .addQuickReply({type: 'location'})
+  .build()
+  
+assertEquals(content, {
+  type: 'text',
+  payload: 'Where are you now?',
+  quick_replies: [{type: 'location'}]
+})
+```
+
+All available builders have these methods:
+- `addQuickReply(quickReply)` - adds a quick reply according to [docs](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-quick-replies) 
+- `addQuickReply(type)` - adds a quick reply for type of *location*, *email* or *phone_number*  
+- `build()` - returns final content
+
+Available builders are:
+  - `contentBuilder.typeGeneric(payload, type)`
+  - `contentBuilder.typeImage(url)`
+  - `contentBuilder.typeVideo(url)`
+  - `contentBuilder.typeStructure()`
+    - use `.addNextCard()` to create a [horizontal scroll](https://docs.amio.io/reference#facebook-messenger-messages-structure-horizontal-scroll)
+  - `contentBuilder.typeText(text)`
 
 ## Webhooks
 
