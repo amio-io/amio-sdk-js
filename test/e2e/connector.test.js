@@ -1,8 +1,6 @@
 const config = require('../config')
 const {AmioApi} = require('../../index')
 const expect = require('chai').expect
-const omit = require('ramda/src/omit')
-const assoc = require('ramda/src/assoc')
 
 const settings = {
   accessToken: config.CONNECTOR_ACCESS_TOKEN
@@ -135,7 +133,16 @@ describe('Amio API Connector', function () {
     })
   })
 
-  // Skipping the tests that get rate limited often
+  describe('utils', () => {
+    describe('content builder', () => {
+      it('just calls the builder', () => {
+        const content = amioApi.contentBuilder.typeText('xxx').build();
+        expect(content).to.eql({type: 'text', payload: 'xxx'})
+      })
+    })
+  })
+
+  // Skipping the tests that gets rate limited often
   describe.skip('settings', () => {
     it('return settings', async () => {
       const settingsFound = await amioApi.settings.get(channel.id)
