@@ -1,15 +1,28 @@
-const contentBuilder = require('../../lib/util/content-builder')
+const startContent = require('../../lib/util/content-builder')
 const expect = require('chai').expect
 
 const quickReply = {type: 'location'}
 const quick_replies = [quickReply]
 const url = 'https://amio.io';
 
-describe('contentBuilder', () => {
+describe('ContentBuilder', () => {
+
+  it('addQuickReply is called first', () => {
+    const content = startContent()
+        .addQuickReply(quickReply)
+        .typeImage(url)
+        .build();
+
+    expect(content).to.eql({
+        type: 'image',
+        payload: {url},
+        quick_replies
+    })
+  })
 
   describe('FileBuilder', () => {
     it('creates an audio content', () => {
-      const content = contentBuilder.typeAudio(url)
+      const content = startContent().typeAudio(url)
         .addQuickReply(quickReply)
         .build()
 
@@ -21,7 +34,7 @@ describe('contentBuilder', () => {
     })
 
     it('creates an image content', () => {
-      const content = contentBuilder.typeImage(url)
+      const content = startContent().typeImage(url)
         .addQuickReply(quickReply)
         .build()
 
@@ -33,7 +46,7 @@ describe('contentBuilder', () => {
     })
 
     it('creates a video content', () => {
-      const content = contentBuilder.typeVideo(url)
+      const content = startContent().typeVideo(url)
         .addQuickReply(quickReply)
         .build()
 
@@ -45,7 +58,7 @@ describe('contentBuilder', () => {
     })
 
     it('creates a file content', () => {
-      const content = contentBuilder.typeFile(url)
+      const content = startContent().typeFile(url)
         .addQuickReply(quickReply)
         .build()
 
@@ -59,7 +72,7 @@ describe('contentBuilder', () => {
 
   describe('GenericBuilder', () => {
     it('creates an empty message', () => {
-      const content = contentBuilder.typeGeneric()
+      const content = startContent().typeGeneric()
         .build();
 
       expect(content).to.eql({
@@ -69,7 +82,7 @@ describe('contentBuilder', () => {
     })
 
     it('creates a non-empty message', () => {
-      const content = contentBuilder.typeGeneric('xxx', 'text')
+      const content = startContent().typeGeneric('xxx', 'text')
         .addQuickReply(quickReply)
         .build();
 
@@ -84,7 +97,7 @@ describe('contentBuilder', () => {
   describe('TextBuilder', () => {
     it('Text and QuickReply', () => {
       const payload = 'text';
-      const content = contentBuilder.typeText(payload)
+      const content = startContent().typeText(payload)
         .addQuickReply(quickReply)
         .build()
 
@@ -95,7 +108,7 @@ describe('contentBuilder', () => {
   describe('StructureBuilder', () => {
 
     it('1 structure with all fields', () => {
-      const content = contentBuilder.typeStructure()
+      const content = startContent().typeStructure()
         .setText('text')
         .setTitle('title')
         .addButtonPostback('postback', 'payload')
@@ -120,7 +133,7 @@ describe('contentBuilder', () => {
     })
 
     it('2 structures', () => {
-      const content = contentBuilder.typeStructure()
+      const content = startContent().typeStructure()
         .setText('structure 1')
         .addNextStructure()
         .setText('structure 2')
