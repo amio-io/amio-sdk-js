@@ -151,6 +151,7 @@ const WebhookRouter = require('amio-sdk-js').WebhookRouter
 const amioWebhookRouter = new WebhookRouter({
     secrets: {
       // CHANNEL_ID: SECRET
+      // !!! CHANNEL_ID must be a string. The numbers can be converted to a different value
       // get CHANNEL_ID at https://app.amio.io/administration/channels/
       // get SECRET at https://app.amio.io/administration/channels/{{CHANNEL_ID}}/webhook
       '15160185464897428':'thzWPzSPhNjfdKdfsLBEHFeLWW',
