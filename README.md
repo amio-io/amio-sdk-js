@@ -142,7 +142,17 @@ Central logic to handle webhooks coming from Amio is **WebhookRouter**. What doe
 - It routes events to handlers (e.g. event `message_received` to a method registered in `amioWebhookRouter.onMessageReceived()`)
 
 ### Webhooks - setup & usage
+1. Attach raw body to requests.
+```js
+const bodyParser = require('body-parser');
+const attachRawBody = require('amio-sdk-js').attachRawBody;
+app.use(bodyParser.json({
+  verify: attachRawBody
+}))
+```
 
+
+2. Setup webhook routing
 ```js
 const express = require('express')
 const router = express.Router()
@@ -172,6 +182,12 @@ amioWebhookRouter.onOptIn(webhook => {/* TODO */})
 router.post('/webhooks/amio', (req, res) => amioWebhookRouter.handleEvent(req, res))
 
 module.exports = router
+```
+
+3. Attach router to express app
+```js
+const amioWebhookRouter = require('path/to/amio-webhook-router.js')
+app.use('/', amioWebhookRouter)
 ```
 
 ### Webhooks - event types
