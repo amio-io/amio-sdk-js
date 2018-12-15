@@ -218,9 +218,11 @@ function createError(channelId, error) {
 
 async function testError(onMethod, webhookEvent, done, secret) {
   await onMethod(verifyError(webhookEvent.data, done))
+  const Readable = require('stream').Readable;
   const req = {
     header: () => xHubSignatureUtils.calculateXHubSignature(secret, JSON.stringify(webhookEvent)),
-    body: webhookEvent
+    body: webhookEvent,
+    rawBody: Buffer.from(JSON.stringify(webhookEvent), 'utf-8')
   }
   const res = {
     sendStatus: () => {
@@ -238,7 +240,8 @@ async function testWebhook(onMethod, testTimestamp, webhookEvent, done, secret =
   onMethod(verifyWebhookEvent(testTimestamp, webhookEvent.data, done))
   const req = {
     header: () => xHubSignatureUtils.calculateXHubSignature(secret, JSON.stringify(webhookEvent)),
-    body: webhookEvent
+    body: webhookEvent,
+    rawBody: Buffer.from(JSON.stringify(webhookEvent), 'utf-8')
   }
   const res = {
     sendStatus: () => {
