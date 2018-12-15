@@ -46,6 +46,41 @@ describe('Webhooks', function () {
     expect(() => new WebhookRouter({secrets: {'channel': 'secret'}})).to.not.throw()
   })
 
+  it('XHubSignature is disabled - signature is wrong but both, error and event are dispatched', async () => {
+    const webhookEvent = createError(channelIdOk, `Failed to verify X-Hub-Signature for "channel.id" ${channelIdOk}`, 'message_received')
+    const webhookRouter = new WebhookRouter({
+      secrets: {
+        [channelIdOk]: 'test-secret'
+      },
+      xhubEnabled: false
+    })
+
+    // testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, done, 'wrong-secret')
+    const testTimestamp = '2016-10-06T13:42:48Z'
+    // webhookRouter.onMessageReceived(webhook => expect(webhook.event).to.eql('message_received'))
+
+    // TODO beautify
+    const req = {
+      header: () => xHubSignatureUtils.calculateXHubSignature('wrong', JSON.stringify(webhookEvent)),
+      body: { event: 'message_received' }
+    };
+    setTimeout(() => webhookRouter.handleEvent(req, {sendStatus: () => {}})
+      .catch(e => {
+        done(e)
+      }), 10)
+
+    await new Promise((resolve, reject) => webhookRouter.onError(webhook => {
+      try{
+        expect(webhook.event).to.eql('webhook_error')
+      } catch(e){
+        reject(e)
+      }
+      resolve()
+    }))
+    await new Promise(resolve => webhookRouter.onMessageReceived(resolve))
+  })
+
+
   it('EVENT message_received', (done) => {
     const event = 'message_received'
     const testTimestamp = '2016-10-06T13:42:48Z'
@@ -204,9 +239,10 @@ function createEventMessagesRead(timestamp, lastReadTimestamp) {
   }
 }
 
-function createError(channelId, error) {
+function createError(channelId, error, event = 'webhook_error') {
   return {
-    event: 'webhook_error',
+    event,
+    timestamp: '2016-10-06T13:42:48Z',
     data: {
       channel: {
         id: channelId
