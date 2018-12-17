@@ -253,7 +253,6 @@ async function testWebhook(onMethod, testTimestamp, webhookEvent, secret = 'test
         reject(e)
       })
   })
-  // await timeout(100) // TODO can be deleted?
 }
 
 function mockResponse() {
