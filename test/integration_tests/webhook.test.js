@@ -47,48 +47,22 @@ describe('Webhooks', function () {
   })
 
   it('XHubSignature is disabled - signature is wrong but both, error and event are dispatched', async () => {
-    const webhookEvent = createError(channelIdOk, `Failed to verify X-Hub-Signature for "channel.id" ${channelIdOk}`, 'message_received')
-    const webhookRouter = new WebhookRouter({
-      secrets: {
-        [channelIdOk]: 'test-secret'
-      },
-      xhubEnabled: false
-    })
+    const webhookRouter = new WebhookRouter({xhubEnabled: false})
+    const webhookEvent = createEvent('message_echo')
+    const req = mockRequest(webhookEvent, 'wrong')
+    setTimeout(() => webhookRouter.handleEvent(req, mockResponse()), 0)
 
-    // testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, done, 'wrong-secret')
-    const testTimestamp = '2016-10-06T13:42:48Z'
-    // webhookRouter.onMessageReceived(webhook => expect(webhook.event).to.eql('message_received'))
-
-    // TODO beautify
-    const req = {
-      header: () => xHubSignatureUtils.calculateXHubSignature('wrong', JSON.stringify(webhookEvent)),
-      body: {event: 'message_received'}
-    };
-    setTimeout(() => webhookRouter.handleEvent(req, {
-      sendStatus: () => {
-      }
-    })
-      .catch(e => {
-        done(e)
-      }), 10)
-
-    await new Promise((resolve, reject) => webhookRouter.onError(webhook => {
-      try {
-        expect(webhook.event).to.eql('webhook_error')
-      } catch (e) {
-        reject(e)
-      }
-      resolve()
-    }))
-    await new Promise(resolve => webhookRouter.onMessageReceived(resolve))
+    // expect - if test timeouts, one of the on* methods was probably not called
+    const onErrorWebhook = await new Promise((resolve) => webhookRouter.onError(resolve))
+    expect(onErrorWebhook.event).to.eql('webhook_error')
+    await new Promise(resolve => webhookRouter.onMessageEcho(resolve))
   })
-
 
   it('EVENT message_received', async () => {
     const event = 'message_received'
     const testTimestamp = '2016-10-06T13:42:48Z'
     const messageId = '151730312500791'
-    const webhookEvent = createEventMessageReceived(event, testTimestamp, messageId)
+    const webhookEvent = createEvent(event, testTimestamp, messageId)
 
     await testWebhook(webhookRouter.onMessageReceived.bind(webhookRouter), testTimestamp, webhookEvent)
   })
@@ -97,7 +71,7 @@ describe('Webhooks', function () {
     const event = 'message_echo'
     const testTimestamp = '2016-11-06T13:42:48Z'
     const messageId = '151730312500800'
-    const webhookEvent = createEventMessageReceived(event, testTimestamp, messageId)
+    const webhookEvent = createEvent(event, testTimestamp, messageId)
 
     await testWebhook(webhookRouter.onMessageEcho.bind(webhookRouter), testTimestamp, webhookEvent)
   })
@@ -142,14 +116,14 @@ function verifyWebhookEvent(testTimestamp, eventData, cb) {
   }
 }
 
-function verifyError(eventData, done) {
+function verifyError(eventData, cb) {
   return async webhook => {
     expect(webhook.data.error).to.eql(eventData.error)
-    done()
+    cb()
   }
 }
 
-function createEventMessageReceived(event, timestamp, id) {
+function createEvent(event, timestamp, id) {
   return {
     event,
     timestamp,
