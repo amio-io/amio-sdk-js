@@ -166,7 +166,7 @@ const amioWebhookRouter = new WebhookRouter({
       '15160185464897428':'thzWPzSPhNjfdKdfsLBEHFeLWW',
       '48660483859995133':'fdsafJzSPhNjfdKdfsLBEjdfks'
     }
-    // xhubEnabled: false // disables X-Hub-Signature verification, do it under your own risk only
+    // xhubEnabled: false // disables X-Hub-Signature verification, do it at your own risk only
 })
 
 // error handling, e.g. x-hub-signature is not correct
