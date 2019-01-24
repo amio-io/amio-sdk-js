@@ -16,29 +16,16 @@ const contact = {
 
 describe('Amio API Connector', function () {
 
-  describe('API error', () => {
-    it('catch a 422 error', async () => {
-      await amioApi.messages.send({}, {accessToken: 'wrong access token'})
-        .then(() => {
-          throw new Error('exception was expected')
-        })
-        .catch(e => {
-          expect(e.amioApiError).not.to.equal(null)
-          expect(e.jsonify()).to.eql({
-            timestamp: e.amioApiError.timestamp,
-            status: {
-              code: 401,
-              message: "Unauthorized"
-            },
-            errors: [{
-              message: 'Wrong accessToken.'
-            }]
-          })
-        })
-    })
-  })
-
   describe('messages', () => {
+    it('send a message', async () => {
+      const content = amioApi.contentBuilder.typeText('test message').build()
+      const message = await amioApi.messages.send({channel, contact, content})
+      expect(message).to.include.all.keys('id', 'channel', 'contact', 'content')
+      expect(message.channel).to.eql({id: channel.id, type: 'facebook_messenger'})
+      expect(message.contact).to.eql({id: contact.id})
+      expect(message.content).to.eql({type: 'text', payload: 'test message'})
+    })
+
     it('fail to send a message', async () => {
       const error = await amioApi.messages.send({}).catch(e => e.amioApiError.status.code)
       expect(error).to.equal(422)
