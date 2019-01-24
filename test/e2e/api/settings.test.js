@@ -14,7 +14,7 @@ const contact = {
   id: config.AMIO_CONTACT_ID
 }
 
-describe('Amio API Connector', function () {
+describe('Amio API', function () {
 
   // Skipping the tests that gets rate limited often
   describe.skip('settings', () => {

@@ -14,7 +14,7 @@ const contact = {
   id: config.AMIO_CONTACT_ID
 }
 
-describe('Amio API Connector', function () {
+describe('Amio API', function () {
 
   describe('channels', () => {
     it('find a channel', async () => {
