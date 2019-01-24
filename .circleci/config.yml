@@ -1,30 +1,77 @@
-version: 2
+version: 2.1
+
+defaults: &defaults
+  working_directory: ~/amio-sdk-js
+  docker:
+    - image: circleci/node:8.11.1
+
+commands:
+  # TODO to orb
+  npm_install:
+    description: Installs & caches npm dependencies.
+    parameters:
+      cache_version:
+        type: integer
+        default: 1
+    steps:
+    - restore_cache:
+        keys:
+        - v<< parameters.cache_version >>-dependencies-{{ checksum "package.json" }}
+        # fallback to using the latest cache if no exact match is found
+        - v<< parameters.cache_version >>-dependencies-
+    - run: npm install
+    - save_cache:
+        paths:
+        - node_modules
+        key: v<< parameters.cache_version >>-dependencies-{{ checksum "package.json" }}
+
 jobs:
   build:
-    working_directory: ~/amio-sdk-js
-
-    docker:
-      - image: circleci/node:8.11.1
+    <<: *defaults
 
     steps:
       - checkout
-
-      # Install & Cache Dependencies
-      - restore_cache:
-          keys:
-          - v2-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v2-dependencies-
-      - run: npm install
-      - save_cache:
-                paths:
-                  - node_modules
-                key: v2-dependencies-{{ checksum "package.json" }}
+      - npm_install:
+          cache_version: 1
 
       - run:
           name: Tests
           command: npm run-script test
 
+      - persist_to_workspace:
+          root: ~/amio-sdk-js
+          paths: .
+
+  publish_prod:
+    <<: *defaults
+
+    steps:
+      - attach_workspace:
+          at: ~/amio-sdk-js
       - run:
           name: Can publish to NPM?
           command: npm run-script can-publish-nix
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/amio-sdk-js/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
+workflows:
+  build_and_publish:
+    jobs:
+      - build:
+          filters:
+            tags:
+              # PROD - run CircleCI on tag create
+              only: /^v[0-9]+(\.[0-9]+)*/
+      - publish_prod:
+          requires:
+            - build
+          filters:
+            tags:
+              # run CircleCI on tag create
+              only: /^v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
