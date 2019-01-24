@@ -1,8 +1,7 @@
-const WebhookRouter = require('../../index').WebhookRouter
-const xHubSignatureUtils = require('../../lib/webhook/x-hub-signature.utils')
+const WebhookRouter = require('../../../index').WebhookRouter
+const xHubSignatureUtils = require('../../../lib/webhook/x-hub-signature.utils')
 const expect = require('chai').expect
 const moment = require('moment')
-const timeout = ms => new Promise(res => setTimeout(res, ms))
 
 let webhookRouter = null
 const channelIdOk = '151730312500791'

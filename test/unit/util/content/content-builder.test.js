@@ -1,4 +1,4 @@
-const contentBuilder = require('../../lib/util/content/content-builder')
+const contentBuilder = require('../../../../lib/util/content/content-builder')
 const expect = require('chai').expect
 
 const quickReply = {type: 'location'}

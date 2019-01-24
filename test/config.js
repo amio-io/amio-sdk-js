@@ -1,10 +1,9 @@
 const forEachObjIndexed = require('ramda/src/forEachObjIndexed')
 
-// we set config for amio+sdk_tests@amio.io in prod
 const config = {
-  CONNECTOR_ACCESS_TOKEN: process.env.CONNECTOR_ACCESS_TOKEN,
-  CONNECTOR_CHANNEL_ID: process.env.CONNECTOR_CHANNEL_ID,
-  CONNECTOR_CONTACT_ID: process.env.CONNECTOR_CONTACT_ID
+  AMIO_ACCESS_TOKEN: process.env.AMIO_ACCESS_TOKEN,
+  AMIO_CHANNEL_ID: process.env.AMIO_CHANNEL_ID,
+  AMIO_CONTACT_ID: process.env.AMIO_CONTACT_ID
 }
 
 forEachObjIndexed((value, key) => {
