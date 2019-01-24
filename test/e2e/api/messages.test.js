@@ -26,6 +26,14 @@ describe('Amio API Connector', function () {
       expect(message.content).to.eql({type: 'text', payload: 'test message'})
     })
 
+    it('send message order is preserved', async () => {
+      const content = amioApi.contentBuilder.typeText('test message').build()
+      const message1 = await amioApi.messages.send({channel, contact, content})
+      const message2 = await amioApi.messages.send({channel, contact, content})
+      // hack: message.id has timestamp in it showing which message is older
+      expect(parseInt(message1.id)).to.be.below(parseInt(message2.id))
+    })
+
     it('fail to send a message', async () => {
       const error = await amioApi.messages.send({}).catch(e => e.amioApiError.status.code)
       expect(error).to.equal(422)
