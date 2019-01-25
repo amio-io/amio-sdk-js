@@ -6,7 +6,7 @@ Server-side library implementing [Amio API](https://docs.amio.io/v1.0/reference)
 > Let us know how to improve this library. We'll be more than happy if you report any issues or even create pull requests. ;-)
 
 - [Installation](#installation)
-- [Examples](#examples)
+- [Quickstart](#quickstart)
   - [send a message](#send-a-message)
   - [receive a message](#receive-a-message)
 - [Amio API](#amio-api)
@@ -28,49 +28,24 @@ Server-side library implementing [Amio API](https://docs.amio.io/v1.0/reference)
 npm install amio-sdk-js --save
 ```
 
-## Examples
+## Quickstart
 
 #### Send a message
 ```js
 const AmioApi = require('amio-sdk-js').AmioApi
 
-// setup AmioApi
 const amioApi = new AmioApi({
-    accessToken: 'get access token at https://app.amio.io/administration/settings/api'
+  accessToken: 'get access token at https://app.amio.io/administration/settings/api'
 })
 
-// build a message content using ContentBuilder
-const content = amioApi.contentBuilder.typeText('test message').build()
-
-// send the message
-amioApi.messages.send(
-  {
-    channel: {id: 'get CHANNEL_ID at https://app.amio.io/administration/channels/'},
-    contact: {id: 'get CONTACT_ID at https://app.amio.io/administration/channels/{CHANNEL_ID}/contacts'},
-    content: content,
-  }
-).then(function (message) {
-  console.log(message)
-}).catch(function (error) {
-  console.log(error);
-}).then(function () {
-  // always executed
-}) 
-
-// Want to use async/await? Add the `async` keyword to your outer function/method.
 async function sendMessage() {
-  try {
-    const message = await amioApi.messages.send(
-      {
-          channel: {id: '{CHANNEL_ID}'},
-          contact: {id: '{CONTACT_ID}'},
-          content: content,
-        }
-    )
-    console.log(message);
-  } catch (error) {
-    console.error(error);
-  }
+  const message = await amioApi.messages.send({
+    channel: {id: '{CHANNEL_ID}'},
+    contact: {id: '{CONTACT_ID}'},
+    content: content
+  })
+
+  return message
 }
 ```
 
@@ -82,17 +57,10 @@ const WebhookRouter = require('amio-sdk-js').WebhookRouter
 
 const amioWebhookRouter = new WebhookRouter({
     secrets: {
-      // !!! CHANNEL_ID must be a string. Numbers can be converted to a different value !!!
       '{CHANNEL_ID}':'{SECRET}'
     }
 })
-
-// error handling, e.g. x-hub-signature is not correct
-amioWebhookRouter.onError(function(error) {
-  console.error(error)
-})
-
-// assign event handlers 
+ 
 amioWebhookRouter.onMessageReceived(function(data) {
   console.log('new message received from contact ' + data.contact.id + 'with content ' + data.content)
 })
@@ -100,8 +68,6 @@ amioWebhookRouter.onMessageReceived(function(data) {
 router.post('/webhooks/amio', function (req, res) {
   amioWebhookRouter.handleEvent(req, res)
 })
-
-module.exports = router
 ```
 
 ### API - setup & usage
@@ -110,19 +76,24 @@ module.exports = router
 const AmioApi = require('amio-sdk-js').AmioApi
 
 const amioApi = new AmioApi({
-    accessToken: 'get access token from https://app.amio.io/administration/settings/api'
+  accessToken: 'get access token at https://app.amio.io/administration/settings/api'
 })
 
-// example request
+// request with async/await
+const message = await amioApi.messages.send({/* message */})
+
+// request with a promise
 amioApi.messages.send({/* message */})
+ .then(message => ...)
 ```
 
 ### API - error handling
 Amio API errors keep the structure described in the [docs](https://docs.amio.io/reference#errors).
 
+##### With async/await
 ```js
 try{
-  // ...
+  const message = await amioApi.messages.send({/* message */})
 } catch(err){
     if (err.amioApiError) {
       console.error(err.jsonify(), err) 
@@ -132,6 +103,21 @@ try{
     console.error(err) 
 }
 ```
+
+##### With promises
+```js
+amioApi.messages.send({/* message */})
+  .then(message => ...)
+  .catch(err => {
+    if (err.amioApiError) {
+    console.error(err.jsonify(), err)
+    return
+  }
+
+  console.error(err)
+})
+```
+
 
 ### API - methods
 amioApi.* | Description | Links
