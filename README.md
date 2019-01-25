@@ -7,6 +7,8 @@ Server-side library implementing [Amio API](https://docs.amio.io/v1.0/reference)
 
 - [Installation](#installation)
 - [Examples](#examples)
+  - [send a message](#send-a-message)
+  - [receive a message](#receive-a-message)
 - [Amio API](#amio-api)
   - [setup & usage](#api---setup--usage)
   - [error handling](#api---error-handling)
@@ -27,8 +29,8 @@ npm install amio-sdk-js --save
 ```
 
 ## Examples
-Send a message:
 
+#### Send a message
 ```js
 const AmioApi = require('amio-sdk-js').AmioApi
 
@@ -72,7 +74,7 @@ async function sendMessage() {
 }
 ```
 
-Receive a message:
+#### Receive a message
 ```js
 const express = require('express')
 const router = express.Router()
