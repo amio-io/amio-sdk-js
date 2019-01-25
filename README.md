@@ -1,12 +1,15 @@
 # amio-sdk-js
-Server-side library implementing [Amio](https://amio.io/) API for instant messengers. It covers API calls and webhooks.
-
 [![CircleCI](https://circleci.com/gh/amio-io/amio-sdk-js.svg?style=shield)](https://circleci.com/gh/amio-io/amio-sdk-js) [![npm version](https://badge.fury.io/js/amio-sdk-js.svg)](https://badge.fury.io/js/amio-sdk-js)
 
-Let us know how to improve this library. We'll be more than happy if you report any issues or even create pull requests. ;-)
+Server-side library implementing [Amio API](https://docs.amio.io/v1.0/reference) for instant messengers. It supports API calls as well as webhooks.
+
+> Let us know how to improve this library. We'll be more than happy if you report any issues or even create pull requests. ;-)
 
 - [Installation](#installation)
-- [API](#api)
+- [Quickstart](#quickstart)
+  - [send a message](#send-a-message)
+  - [receive a message](#receive-a-message)
+- [SDK API](#sdk-api)
   - [setup & usage](#api---setup--usage)
   - [error handling](#api---error-handling)
   - [methods](#api---methods)
@@ -15,10 +18,9 @@ Let us know how to improve this library. We'll be more than happy if you report 
   - [setup & usage](#webhooks---setup--usage)
   - [event types](#webhooks---event-types) 
 - [Missing a feature?](#missing-a-feature)
-  
-## Prerequisities
 
-You need to [create an account](https://app.amio.io/signup) before you can use this library.
+## Prerequisities
+[Signup to Amio](https://app.amio.io/signup) and create a channel before using this library.
 
 ## Installation
 
@@ -26,7 +28,49 @@ You need to [create an account](https://app.amio.io/signup) before you can use t
 npm install amio-sdk-js --save
 ```
 
-## API 
+## Quickstart
+
+#### Send a message
+```js
+const AmioApi = require('amio-sdk-js').AmioApi
+
+const amioApi = new AmioApi({
+  accessToken: 'get access token at https://app.amio.io/administration/settings/api'
+})
+
+async function sendMessage() {
+  const message = await amioApi.messages.send({
+    channel: {id: '{CHANNEL_ID}'},
+    contact: {id: '{CONTACT_ID}'},
+    content: content
+  })
+
+  return message
+}
+```
+
+#### Receive a message
+```js
+const express = require('express')
+const router = express.Router()
+const WebhookRouter = require('amio-sdk-js').WebhookRouter
+
+const amioWebhookRouter = new WebhookRouter({
+    secrets: {
+      '{CHANNEL_ID}':'{SECRET}'
+    }
+})
+ 
+amioWebhookRouter.onMessageReceived(function(data) {
+  console.log('new message received from contact ' + data.contact.id + 'with content ' + data.content)
+})
+
+router.post('/webhooks/amio', function (req, res) {
+  amioWebhookRouter.handleEvent(req, res)
+})
+```
+
+## SDK API
 
 ### API - setup & usage
 
@@ -34,19 +78,24 @@ npm install amio-sdk-js --save
 const AmioApi = require('amio-sdk-js').AmioApi
 
 const amioApi = new AmioApi({
-    accessToken: 'get access token from https://app.amio.io/administration/settings/api'
+  accessToken: 'get access token at https://app.amio.io/administration/settings/api'
 })
 
-// example request
+// request with async/await
+const message = await amioApi.messages.send({/* message */})
+
+// request with a promise
 amioApi.messages.send({/* message */})
+ .then(message => ...)
 ```
 
 ### API - error handling
 Amio API errors keep the structure described in the [docs](https://docs.amio.io/reference#errors).
 
+##### With async/await
 ```js
 try{
-  // ...
+  const message = await amioApi.messages.send({/* message */})
 } catch(err){
     if (err.amioApiError) {
       console.error(err.jsonify(), err) 
@@ -56,6 +105,21 @@ try{
     console.error(err) 
 }
 ```
+
+##### With promises
+```js
+amioApi.messages.send({/* message */})
+  .then(message => ...)
+  .catch(err => {
+    if (err.amioApiError) {
+    console.error(err.jsonify(), err)
+    return
+  }
+
+  console.error(err)
+})
+```
+
 
 ### API - methods
 amioApi.* | Description | Links

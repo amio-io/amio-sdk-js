@@ -1,4 +1,4 @@
-const Request = require('../../lib/api/request')
+const Request = require('../../../lib/api/request')
 const expect = require('chai').expect
 
 function requestHeaders() {
