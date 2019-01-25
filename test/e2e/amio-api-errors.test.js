@@ -1,5 +1,5 @@
-const config = require('../../config')
-const {AmioApi} = require('../../../index')
+const config = require('../config')
+const {AmioApi} = require('../../index')
 const expect = require('chai').expect
 
 const settings = {
