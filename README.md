@@ -9,7 +9,7 @@ Server-side library implementing [Amio API](https://docs.amio.io/v1.0/reference)
 - [Quickstart](#quickstart)
   - [send a message](#send-a-message)
   - [receive a message](#receive-a-message)
-- [Amio API](#amio-api)
+- [SDK API](#sdk-api)
   - [setup & usage](#api---setup--usage)
   - [error handling](#api---error-handling)
   - [methods](#api---methods)
@@ -69,6 +69,8 @@ router.post('/webhooks/amio', function (req, res) {
   amioWebhookRouter.handleEvent(req, res)
 })
 ```
+
+## SDK API
 
 ### API - setup & usage
 
