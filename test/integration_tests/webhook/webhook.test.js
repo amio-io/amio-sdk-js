@@ -45,15 +45,13 @@ describe('Webhooks', function () {
     expect(() => new WebhookRouter({secrets: {'channel': 'secret'}})).to.not.throw()
   })
 
-  it('XHubSignature is disabled - signature is wrong but both, error and event are dispatched', async () => {
+  it('XHubSignature is disabled - signature is wrong but success callback is dispatched anyway', async () => {
     const webhookRouter = new WebhookRouter({xhubEnabled: false})
     const webhookEvent = createEvent('message_echo')
     const req = mockRequest(webhookEvent, 'wrong')
     setTimeout(() => webhookRouter.handleEvent(req, mockResponse()), 0)
 
     // expect - if test timeouts, one of the on* methods was probably not called
-    const onErrorWebhook = await new Promise((resolve) => webhookRouter.onError(resolve))
-    expect(onErrorWebhook.event).to.eql('webhook_error')
     await new Promise(resolve => webhookRouter.onMessageEcho(resolve))
   })
 
