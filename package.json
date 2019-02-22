@@ -8,7 +8,7 @@
     "url": "git@github.com:amio-io/amio-sdk-js"
   },
   "engines": {
-    "node": ">=7.6.0"
+    "node": ">=6.0.0"
   },
   "scripts": {
     "test": "mocha \"test/**/*.test.js\"",

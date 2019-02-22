@@ -226,36 +226,32 @@ function createError(channelId, error, event = 'webhook_error') {
   }
 }
 
-async function testError(onMethod, webhookEvent, secret) {
-  return new Promise(async (resolve, reject) => {
+function testError(onMethod, webhookEvent, secret) {
+  return new Promise(async resolve => {
     await onMethod(verifyError(webhookEvent.data, resolve))
     const req = mockRequest(webhookEvent, secret)
     const res = mockResponse()
 
-    await webhookRouter.handleEvent(req, res)
-      .catch(e => {
-        reject(e)
-      })
+    webhookRouter.handleEvent(req, res)
   })
 }
 
-async function testWebhook(onMethod, testTimestamp, webhookEvent, secret = 'test-secret') {
-  return new Promise(async (resolve, reject) => {
+function testWebhook(onMethod, testTimestamp, webhookEvent, secret = 'test-secret') {
+  return new Promise(async resolve => {
     onMethod(verifyWebhookEvent(testTimestamp, webhookEvent.data, resolve))
     const req = mockRequest(webhookEvent, secret)
     const res = mockResponse()
 
-    await webhookRouter.handleEvent(req, res)
-      .catch(e => {
-        reject(e)
-      })
+    webhookRouter.handleEvent(req, res)
   })
 }
 
 function mockResponse() {
+  const statusHolder = {}
+
   return {
-    sendStatus: () => {
-    }
+    sendStatus: status => statusHolder.status = status,
+    getStatus: () => statusHolder.status
   }
 }
 
