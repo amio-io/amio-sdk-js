@@ -4,6 +4,8 @@
 *.ipr
 *.iws
 
+# VSCode
+.vscode
 
 # Logs
 logs
