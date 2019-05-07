@@ -51,5 +51,22 @@ describe('Amio API', function () {
       const error = await amioApi.channels.delete(123).catch(e => e.amioApiError.status.code)
       expect(error).to.equal(404)
     })
+
+    it('create and delete channel', async () => {
+      const response = await amioApi.channels.create({
+        type: 'amio_chat',
+        name: 'test'
+      })
+      const channelId = response.id
+      expect(response).to.eql({
+        id: channelId,
+        type: 'amio_chat',
+        name: 'test',
+        webhook: null
+      })
+
+      const deleteSuccess = await amioApi.channels.delete(channelId)
+      expect(deleteSuccess).to.be.true
+    })
   })
 })
