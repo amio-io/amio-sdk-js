@@ -1,6 +1,6 @@
 {
   "name": "amio-sdk-js",
-  "version": "4.1.1",
+  "version": "4.2.0",
   "description": "Multi-messenger javascript library for Amio.io API. https://amio.io",
   "license": "MIT",
   "repository": {

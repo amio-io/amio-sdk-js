@@ -61,6 +61,7 @@ describe('Amio API', function () {
       expect(response).to.eql({
         id: channelId,
         type: 'amio_chat',
+        mode: 'production',
         name: 'test',
         webhook: null
       })
