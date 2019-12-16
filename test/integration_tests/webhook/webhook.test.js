@@ -90,6 +90,13 @@ describe('Webhooks', function () {
     await testWebhook(webhookRouter.onMessagesRead.bind(webhookRouter), testTimestamp, webhookEvent)
   })
 
+  it('EVENT notification', async () => {
+    const testTimestamp = '2016-11-06T13:42:48Z'
+    const webhookEvent = createEventNotification(testTimestamp)
+
+    await testWebhook(webhookRouter.onNotificationReceived.bind(webhookRouter), testTimestamp, webhookEvent)
+  })
+
   it('EVENT postback', async () => {
     const testTimestamp = '2016-11-06T13:42:48Z'
     const webhookEvent = createEventPostback(testTimestamp)
@@ -138,6 +145,24 @@ function createEvent(event, timestamp, id) {
         type: 'text',
         payload: 'Test message'
       }
+    }
+  }
+}
+
+function createEventNotification(timestamp) {
+  return {
+    event: 'notification',
+    timestamp,
+    data: {
+      channel: {
+        id: channelIdOk,
+        type: 'facebook_messenger',
+      },
+      contact: {
+        id: '1419024554891329'
+      },
+      type: 'custom',
+      payload: {}
     }
   }
 }
