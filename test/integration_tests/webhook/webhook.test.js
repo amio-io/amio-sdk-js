@@ -38,18 +38,18 @@ describe('Webhooks', function () {
     await testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, 'wrong-secret')
   })
 
-  it('ERROR: addSecret(): wrong secret for a channel', async () => {
+  it('ERROR: setSecret(): wrong secret for a channel', async () => {
     const webhookEvent = createError(channelIdOk, `Failed to verify X-Hub-Signature for "channel.id" ${channelIdOk}`)
     webhookRouter = new WebhookRouter()
-    webhookRouter.addSecret(channelIdOk, 'test-secret')
+    webhookRouter.setSecret(channelIdOk, 'test-secret')
     await testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, 'wrong-secret')
   })
 
-  it('ERROR: addSecret(): secret not set for a channel', async () => {
+  it('ERROR: setSecret(): secret not set for a channel', async () => {
     const channelId = 'non-existent-channel-id'
     const webhookEvent = createError(channelId, `Failed to verify X-Hub-Signature. Channel with id "non-existent-channel-id" is missing webhook secret.`)
     webhookRouter = new WebhookRouter()
-    webhookRouter.addSecret(channelIdOk, 'test-secret')
+    webhookRouter.setSecret(channelIdOk, 'test-secret')
     await testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, 'wrong-secret')
   })
 
@@ -74,6 +74,20 @@ describe('Webhooks', function () {
 
     // expect - if test timeouts, one of the on* methods was probably not called
     await new Promise(resolve => webhookRouter.onMessageEcho(resolve))
+  })
+
+  it('getSecret() not found', async () => {
+    webhookRouter = new WebhookRouter()
+    webhookRouter.setSecret(channelIdOk, 'test-secret')
+    const secret = webhookRouter.getSecret('xxx')
+    expect(secret).to.be.undefined
+  })
+
+  it('getSecret() found', async () => {
+    webhookRouter = new WebhookRouter()
+    webhookRouter.setSecret(channelIdOk, 'test-secret')
+    const secret = webhookRouter.getSecret(channelIdOk)
+    expect(secret).to.equal('test-secret')
   })
 
   it('EVENT message_received', async () => {

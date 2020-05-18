@@ -14,7 +14,7 @@ const contact = {
   id: config.AMIO_CONTACT_ID
 }
 
-// To make these tests running, send a message to FB channel so that it does not trigger 'Message sent outside the 24 hour window'
+// To make these tests running, send a message to FB CHANNEL and CONTACT so that it does not trigger 'Message sent outside the 24 hour window'
 describe('Amio API', function () {
 
   describe('messages', () => {

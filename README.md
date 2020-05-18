@@ -258,6 +258,13 @@ const amioWebhookRouter = require('path/to/amio-webhook-router.js')
 app.use('/', amioWebhookRouter)
 ```
 
+### Webhooks - methods
+
+amioWebhookRouter.* | Description
+-|-
+`setSecret(channelId, secret)` | Pairs a channelId and a secret. Setting channelId twice will override the previous secret.
+`getSecret(channelId)` | Return a secret if found.
+
 ### Webhooks - event types
 
 **Facebook:**
