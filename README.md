@@ -234,7 +234,7 @@ const amioWebhookRouter = new WebhookRouter({
 })
 
 // add secret dynamically
-amioWebhookRouter.addSecret('48660483859995133', 'fdsafJzSPhNjfdKdfsLBEjdfks')
+amioWebhookRouter.setSecret('48660483859995133', 'fdsafJzSPhNjfdKdfsLBEjdfks')
 
 // error handling, e.g. x-hub-signature is not correct
 amioWebhookRouter.onError(error => console.error(error))
@@ -262,8 +262,8 @@ app.use('/', amioWebhookRouter)
 
 amioWebhookRouter.* | Description
 -|-
-`setSecret(channelId, secret)` | Pairs a channelId and a secret. Setting channelId twice will override the previous secret.
-`getSecret(channelId)` | Return a secret if found.
+`setSecret(channelId, secret)` | Pairs a `channelId` with a `secret`. Setting `secret` for the same `channelId` twice will override the previous value.
+`getSecret(channelId)` | Returns a secret if found.
 
 ### Webhooks - event types
 
