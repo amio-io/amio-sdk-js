@@ -17,7 +17,7 @@ describe('Webhooks', function () {
     webhookRouter = new WebhookRouter(settings)
   })
 
-  it('ERROR wrong secret for a channel', async () => {
+  it('ERROR: default secret: wrong secret for a channel', async () => {
     const webhookEvent = createError(channelIdOk, `Failed to verify X-Hub-Signature for "channel.id" ${channelIdOk}`)
     webhookRouter = new WebhookRouter({
       secrets: {
@@ -27,7 +27,7 @@ describe('Webhooks', function () {
     await testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, 'wrong-secret')
   })
 
-  it('ERROR secret not set for a channel', async () => {
+  it('ERROR: default secret: secret not set for a channel', async () => {
     const channelId = 'non-existent-channel-id'
     const webhookEvent = createError(channelId, `Failed to verify X-Hub-Signature. Channel with id "non-existent-channel-id" is missing webhook secret.`)
     webhookRouter = new WebhookRouter({
@@ -38,11 +38,32 @@ describe('Webhooks', function () {
     await testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, 'wrong-secret')
   })
 
-  it('ERROR no secret specified', () => {
-    expect(() => new WebhookRouter()).to.throw('Define at least 1 secret.')
-    expect(() => new WebhookRouter({})).to.throw('Define at least 1 secret.')
-    expect(() => new WebhookRouter({secrets: {}})).to.throw('Define at least 1 secret.')
-    expect(() => new WebhookRouter({secrets: {'channel': 'secret'}})).to.not.throw()
+  it('ERROR: addSecret(): wrong secret for a channel', async () => {
+    const webhookEvent = createError(channelIdOk, `Failed to verify X-Hub-Signature for "channel.id" ${channelIdOk}`)
+    webhookRouter = new WebhookRouter()
+    webhookRouter.addSecret(channelIdOk, 'test-secret')
+    await testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, 'wrong-secret')
+  })
+
+  it('ERROR: addSecret(): secret not set for a channel', async () => {
+    const channelId = 'non-existent-channel-id'
+    const webhookEvent = createError(channelId, `Failed to verify X-Hub-Signature. Channel with id "non-existent-channel-id" is missing webhook secret.`)
+    webhookRouter = new WebhookRouter()
+    webhookRouter.addSecret(channelIdOk, 'test-secret')
+    await testError(webhookRouter.onError.bind(webhookRouter), webhookEvent, 'wrong-secret')
+  })
+
+  it('ERROR no secret specified', async () => {
+    const webhookRouter = new WebhookRouter()
+    const webhookEvent = createEvent('message_echo')
+    const req = mockRequest(webhookEvent, 'wrong')
+
+    try{
+      webhookRouter.handleEvent(req, mockResponse())
+      throw Error('test should have failed')
+    } catch(e){
+      expect(e.message).to.equal('Define at least 1 secret.')
+    }
   })
 
   it('XHubSignature is disabled - signature is wrong but success callback is dispatched anyway', async () => {
