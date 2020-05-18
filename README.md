@@ -16,7 +16,7 @@ Server-side library implementing [Amio API](https://docs.amio.io/v1.0/reference)
   - [content builders](#api---content-builders)
 - [Webhooks](#webhooks)
   - [setup & usage](#webhooks---setup--usage)
-  - [event types](#webhooks---event-types) 
+  - [event types](#webhooks---event-types)
 - [Missing a feature?](#missing-a-feature)
 
 ## Prerequisities
@@ -60,7 +60,7 @@ const amioWebhookRouter = new WebhookRouter({
       '{CHANNEL_ID}':'{SECRET}'
     }
 })
- 
+
 amioWebhookRouter.onMessageReceived(function(data) {
   console.log('new message received from contact ' + data.contact.id + 'with content ' + data.content)
 })
@@ -98,11 +98,11 @@ try{
   const message = await amioApi.messages.send({/* message */})
 } catch(err){
     if (err.amioApiError) {
-      console.error(err.jsonify(), err) 
+      console.error(err.jsonify(), err)
       return
     }
-    
-    console.error(err) 
+
+    console.error(err)
 }
 ```
 
@@ -129,13 +129,13 @@ amioApi.* | Description | Links
 `channels.create(request)` | Create a new channel. | [docs](https://docs.amio.io/v1.0/reference#channels-create-channel)
 `channels.update(channelId, request)` | Update specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-update-channel)
 `channels.delete(channelId)` | Delete specified channel. | [docs](https://docs.amio.io/v1.0/reference#channels-delete-channel)
-`contentBuilder.typeAudio(url)` | Start building Audio content. | [sdk-docs](#api---content-builders) 
-`contentBuilder.typeFile(url)` | Start building File content. | [sdk-docs](#api---content-builders) 
-`contentBuilder.typeGeneric(payload, type)` | Start building any content. | [sdk-docs](#api---content-builders) 
-`contentBuilder.typeImage(url)` | Start building Image content. | [sdk-docs](#api---content-builders) 
-`contentBuilder.typeVideo(url)` | Start building Video content. | [sdk-docs](#api---content-builders) 
-`contentBuilder.typeStructure()` | Start building Structure content. | [sdk-docs](#api---content-builders) 
-`contentBuilder.typeText(text)` | Start building Text content. | [sdk-docs](#api---content-builders) 
+`contentBuilder.typeAudio(url)` | Start building Audio content. | [sdk-docs](#api---content-builders)
+`contentBuilder.typeFile(url)` | Start building File content. | [sdk-docs](#api---content-builders)
+`contentBuilder.typeGeneric(payload, type)` | Start building any content. | [sdk-docs](#api---content-builders)
+`contentBuilder.typeImage(url)` | Start building Image content. | [sdk-docs](#api---content-builders)
+`contentBuilder.typeVideo(url)` | Start building Video content. | [sdk-docs](#api---content-builders)
+`contentBuilder.typeStructure()` | Start building Structure content. | [sdk-docs](#api---content-builders)
+`contentBuilder.typeText(text)` | Start building Text content. | [sdk-docs](#api---content-builders)
 `contacts.get(channelId, contactId)` | Get information about a contact in specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-get-contact)
 `contacts.list(channelId, params)` | List contacts for specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-list-contacts), [params](https://docs.amio.io/v1.0/reference#pagination)
 `contacts.delete(channelId, contactId)` | Delete a contact within specified channel. | [docs](https://docs.amio.io/v1.0/reference#contacts-delete-contact)
@@ -148,14 +148,14 @@ amioApi.* | Description | Links
 ### API - content builders
 
 Use content-builders to better structure your code. The builders represent all available message types and it's up to you
-pick the right builder for the right platform. 
+pick the right builder for the right platform.
 
 For example, you can add a location quick reply to your question:
 ```js
 const content = amioApi.contentBuilder.typeText('Where are you now?')
   .addQuickReply('location')
   .build()
-  
+
 assertEquals(content, {
   type: 'text',
   payload: 'Where are you now?',
@@ -163,14 +163,14 @@ assertEquals(content, {
 })
 ```
 
-Then you just send the `content` in the message: 
+Then you just send the `content` in the message:
 ```js
 amioApi.messages.send({channel, contanct, content})
 ```
 
 All available builders have these methods:
-- `addQuickReply(quickReply)` - adds a quick reply according to [docs](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-quick-replies) 
-- `addQuickReply(type)` - adds a quick reply for type of *location*, *email* or *phone_number*. Suitable for quickReplies with `type` field only. 
+- `addQuickReply(quickReply)` - adds a quick reply according to [docs](https://docs.amio.io/v1.0/reference#facebook-messenger-messages-quick-replies)
+- `addQuickReply(type)` - adds a quick reply for type of *location*, *email* or *phone_number*. Suitable for quickReplies with `type` field only.
 - `build()` - returns final content
 
 Available builders are:
@@ -228,16 +228,18 @@ const amioWebhookRouter = new WebhookRouter({
       // !!! CHANNEL_ID must be a string. The numbers can be converted to a different value
       // get CHANNEL_ID at https://app.amio.io/administration/channels/
       // get SECRET at https://app.amio.io/administration/channels/{{CHANNEL_ID}}/webhook
-      '15160185464897428':'thzWPzSPhNjfdKdfsLBEHFeLWW',
-      '48660483859995133':'fdsafJzSPhNjfdKdfsLBEjdfks'
+      '15160185464897428':'thzWPzSPhNjfdKdfsLBEHFeLWW'
     }
     // xhubEnabled: false // disables X-Hub-Signature verification, do it at your own risk only
 })
 
+// add secret dynamically
+amioWebhookRouter.addSecret('48660483859995133', 'fdsafJzSPhNjfdKdfsLBEjdfks')
+
 // error handling, e.g. x-hub-signature is not correct
 amioWebhookRouter.onError(error => console.error(error))
 
-// assign event handlers 
+// assign event handlers
 amioWebhookRouter.onMessageReceived(webhook => console.log('a new message from contact ${data.contact.id} was received!'))
 amioWebhookRouter.onMessagesDelivered(webhook => {/* TODO */})
 amioWebhookRouter.onMessagesRead(webhook => {/* TODO */})
@@ -259,30 +261,30 @@ app.use('/', amioWebhookRouter)
 ### Webhooks - event types
 
 **Facebook:**
-- [Message Received](https://docs.amio.io/reference#facebook-messenger-webhooks-message-received) 
-- [Messages Delivered](https://docs.amio.io/reference#facebook-messenger-webhooks-messages-delivered) 
-- [Messages Read](https://docs.amio.io/reference#facebook-messenger-webhooks-messages-read) 
-- [Message Echo](https://docs.amio.io/reference#facebook-messeger-webhooks-message-echo) 
-- [Postback Received](https://docs.amio.io/reference#facebook-messeger-webhooks-postback-received) 
+- [Message Received](https://docs.amio.io/reference#facebook-messenger-webhooks-message-received)
+- [Messages Delivered](https://docs.amio.io/reference#facebook-messenger-webhooks-messages-delivered)
+- [Messages Read](https://docs.amio.io/reference#facebook-messenger-webhooks-messages-read)
+- [Message Echo](https://docs.amio.io/reference#facebook-messeger-webhooks-message-echo)
+- [Postback Received](https://docs.amio.io/reference#facebook-messeger-webhooks-postback-received)
 - [Opt-in](https://docs.amio.io/reference#facebook-messeger-webhooks-opt-in)
 
 **Viber Bot:**
 - [Message Received](https://docs.amio.io/reference#viber-webhooks-message-received)
-- [Messages Delivered](https://docs.amio.io/reference#viber-webhooks-messages-delivered) 
-- [Messages Read](https://docs.amio.io/reference#viber-webhooks-messages-read) 
-- [Message Echo](https://docs.amio.io/reference#viber-webhooks-message-echo) 
-- [Postback Received](https://docs.amio.io/reference#viber-webhooks-postback-received) 
+- [Messages Delivered](https://docs.amio.io/reference#viber-webhooks-messages-delivered)
+- [Messages Read](https://docs.amio.io/reference#viber-webhooks-messages-read)
+- [Message Echo](https://docs.amio.io/reference#viber-webhooks-message-echo)
+- [Postback Received](https://docs.amio.io/reference#viber-webhooks-postback-received)
 
 **Viber Business Messages:**
-- [Messages Delivered](https://docs.amio.io/reference#viber-business-webhooks-messages-delivered) 
-- [Messages Read](https://docs.amio.io/reference#viber-business-webhooks-messages-read) 
-- [Message Failed](https://docs.amio.io/reference#viber-business-webhooks-message-failed) 
-- [Message Echo](https://docs.amio.io/reference#viber-business-webhooks-message-echo) 
+- [Messages Delivered](https://docs.amio.io/reference#viber-business-webhooks-messages-delivered)
+- [Messages Read](https://docs.amio.io/reference#viber-business-webhooks-messages-read)
+- [Message Failed](https://docs.amio.io/reference#viber-business-webhooks-message-failed)
+- [Message Echo](https://docs.amio.io/reference#viber-business-webhooks-message-echo)
 
 **SMS:**
-- [Message Received](https://docs.amio.io/reference#mobile-webhooks-message-received) 
-- [Messages Delivered](https://docs.amio.io/reference#mobile-webhooks-messages-delivered) 
-- [Message Failed](https://docs.amio.io/reference#mobile-webhooks-message-failed) 
+- [Message Received](https://docs.amio.io/reference#mobile-webhooks-message-received)
+- [Messages Delivered](https://docs.amio.io/reference#mobile-webhooks-messages-delivered)
+- [Message Failed](https://docs.amio.io/reference#mobile-webhooks-message-failed)
 
 ## Debugging
 
