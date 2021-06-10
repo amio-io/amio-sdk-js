@@ -21,7 +21,6 @@ describe('Amio API', function () {
       const contactFound = await amioApi.contacts.get(channel.id, contact.id)
 
       expect(contactFound).to.include.all.keys('id', 'name')
-      expect(contactFound).to.have.any.keys('gender', 'locale', 'country', 'time_zone', 'photo_url')
       expect(contactFound.id).to.eql(contact.id)
     })
 

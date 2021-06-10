@@ -22,7 +22,7 @@ describe('Amio API', function () {
       const content = amioApi.contentBuilder.typeText('test message').build()
       const message = await amioApi.messages.send({channel, contact, content})
       expect(message).to.include.all.keys('id', 'channel', 'contact', 'content')
-      expect(message.channel).to.eql({id: channel.id, type: 'facebook_messenger'})
+      expect(message.channel).to.eql({id: channel.id, type: 'amio_chat'})
       expect(message.contact).to.eql({id: contact.id})
       expect(message.content).to.eql({type: 'text', payload: 'test message'})
     })
