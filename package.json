@@ -1,6 +1,6 @@
 {
   "name": "amio-sdk-js",
-  "version": "4.4.2",
+  "version": "4.4.3",
   "description": "Multi-messenger javascript library for Amio.io API. https://amio.io",
   "license": "MIT",
   "repository": {
@@ -15,7 +15,7 @@
     "can-publish-nix": "npm info $npm_package_name version | npm-version-bump-checker"
   },
   "dependencies": {
-    "axios": "0.21.1",
+    "axios": "0.30.3",
     "debug": "3.1.0",
     "ramda": "0.24.1"
   },
