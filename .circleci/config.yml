@@ -49,6 +49,9 @@ jobs:
       - attach_workspace:
           at: ~/amio-sdk-js
       - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
           name: Can publish to NPM?
           command: npm run-script can-publish-nix
       - run:
