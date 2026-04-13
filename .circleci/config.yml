@@ -62,7 +62,7 @@ jobs:
               echo "OIDC token missing"
               exit 1
             fi
-            npm publish --provenance
+            npm publish
 
 workflows:
   build_and_publish:

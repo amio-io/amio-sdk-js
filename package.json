@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:amio-io/amio-sdk-js"
+    "url": "git+ssh://git@github.com/amio-io/amio-sdk-js.git"
   },
   "engines": {
     "node": ">=6.0.0"
