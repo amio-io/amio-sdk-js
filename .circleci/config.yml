@@ -3,7 +3,7 @@ version: 2.1
 defaults: &defaults
   working_directory: ~/amio-sdk-js
   docker:
-    - image: circleci/node:8.11.1
+    - image: cimg/node:22.14
 
 commands:
   # TODO to orb
