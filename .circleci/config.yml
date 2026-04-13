@@ -54,8 +54,15 @@ jobs:
       - run:
           name: Publish to npm with OIDC
           command: |
-            export NPM_ID_TOKEN=$(circleci run oidc get --claims '{"aud": "npm:registry.npmjs.org"}')
-            npm publish
+            npm --version
+            export NPM_ID_TOKEN="$(circleci run oidc get --claims '{"aud":"npm:registry.npmjs.org"}')"
+            if [ -n "$NPM_ID_TOKEN" ]; then
+              echo "OIDC token acquired"
+            else
+              echo "OIDC token missing"
+              exit 1
+            fi
+            npm publish --provenance
 
 workflows:
   build_and_publish:
