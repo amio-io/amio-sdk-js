@@ -52,11 +52,10 @@ jobs:
           name: Can publish to NPM?
           command: npm run-script can-publish-nix
       - run:
-          name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/amio-sdk-js/.npmrc
-      - run:
-          name: Publish package
-          command: npm publish
+          name: Publish to npm with OIDC
+          command: |
+            export NPM_ID_TOKEN=$(circleci run oidc get --claims '{"aud": "npm:registry.npmjs.org"}')
+            npm publish
 
 workflows:
   build_and_publish:
