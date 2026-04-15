@@ -49,40 +49,14 @@ jobs:
       - attach_workspace:
           at: ~/amio-sdk-js
       - run:
-          name: Install dependencies
-          command: npm ci
-      - run:
           name: Can publish to NPM?
           command: npm run-script can-publish-nix
       - run:
-          name: Publish to npm with OIDC
-          command: |
-            npm --version
-            export NPM_ID_TOKEN="$(circleci run oidc get --claims '{"aud":"npm:registry.npmjs.org"}')"
-            if [ -n "$NPM_ID_TOKEN" ]; then
-              echo "OIDC token acquired"
-            else
-              echo "OIDC token missing"
-              exit 1
-            fi
-            node -e '
-            const t = process.env.NPM_ID_TOKEN || ""
-            const p = t.split(".")[1]
-            if (!p) {
-              console.error("No JWT payload")
-              process.exit(1)
-            }
-            const b64 = p.replace(/-/g, "+").replace(/_/g, "/")
-            const json = Buffer.from(b64, "base64").toString("utf8")
-            const c = JSON.parse(json)
-            console.log("iss:", c.iss)
-            console.log("aud:", c.aud)
-            console.log("sub:", c.sub)
-            console.log("oidc.circleci.com/project-id:", c["oidc.circleci.com/project-id"])
-            console.log("oidc.circleci.com/vcs-origin:", c["oidc.circleci.com/vcs-origin"])
-            console.log("oidc.circleci.com/vcs-ref:", c["oidc.circleci.com/vcs-ref"])
-            '
-            npm publish
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/amio-sdk-js/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
 
 workflows:
   build_and_publish:
